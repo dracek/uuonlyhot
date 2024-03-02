@@ -1,0 +1,115 @@
+[
+    {
+        "id": "259f172f600cfb76",
+        "type": "tab",
+        "label": "Inject data",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "545be282f5e30990",
+        "type": "inject",
+        "z": "259f172f600cfb76",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.timestamp",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 320,
+        "wires": [
+            [
+                "1489ac1997b61065"
+            ]
+        ]
+    },
+    {
+        "id": "1f2ddb1c2d8772ee",
+        "type": "debug",
+        "z": "259f172f600cfb76",
+        "name": "debug temp",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "1489ac1997b61065",
+        "type": "function",
+        "z": "259f172f600cfb76",
+        "name": "fake temperature",
+        "func": "function generateFakeTemperature(timestamp) {\n  const date = new Date(timestamp);\n\n  const month = date.getMonth();\n  const hour = date.getHours();\n  const minute = date.getMinutes();\n\n  const max = 30;\n  const min = -5;\n  const av = (max + min) / 2;\n  const height = (max - min) / 2;\n\n  const averageTemperature = av + height * Math.sin(((month - 3) / 12) * 2 * Math.PI);\n  \n  const dailyTemperatureVariation =\n    5 * Math.sin((((hour - 6) + minute / 60) / 24) * 2 * Math.PI);\n\n  const randomNoise = Math.random() - 0.5;\n\n  const finalTemperature =\n    averageTemperature + dailyTemperatureVariation + randomNoise;\n\n  return Math.round(finalTemperature * 100) / 100;\n}\nmsg.payload.temperature = generateFakeTemperature(msg.payload.timestamp);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 320,
+        "wires": [
+            [
+                "3f783490fefcba2e",
+                "1f2ddb1c2d8772ee"
+            ]
+        ]
+    },
+    {
+        "id": "3f783490fefcba2e",
+        "type": "mongodb4",
+        "z": "259f172f600cfb76",
+        "clientNode": "5376fae6dc0a9cbe",
+        "mode": "collection",
+        "collection": "data",
+        "operation": "insertOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "",
+        "x": 820,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5376fae6dc0a9cbe",
+        "type": "mongodb4-client",
+        "name": "red",
+        "protocol": "mongodb",
+        "hostname": "127.0.0.1",
+        "port": "27017",
+        "dbName": "red",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-simple"
+    }
+]

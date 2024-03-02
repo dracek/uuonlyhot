@@ -1,0 +1,116 @@
+[
+    {
+        "id": "54ace4d9f27746f2",
+        "type": "tab",
+        "label": "Export average data",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e62f89401ab2af8d",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload[0]",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d554f67470a84459",
+        "type": "mongodb4",
+        "z": "54ace4d9f27746f2",
+        "clientNode": "5376fae6dc0a9cbe",
+        "mode": "collection",
+        "collection": "data",
+        "operation": "aggregate",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "",
+        "x": 700,
+        "y": 300,
+        "wires": [
+            [
+                "e62f89401ab2af8d"
+            ]
+        ]
+    },
+    {
+        "id": "d43803f8bac685b6",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "function 3",
+        "func": "const pipeline = [    \n  {\n    $group:\n      {\n        _id: 1,\n        prumer: {$avg: \"$temperature\" },\n        count: { $sum: 1 }\n      }\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "d554f67470a84459"
+            ]
+        ]
+    },
+    {
+        "id": "03f966e9140432dd",
+        "type": "inject",
+        "z": "54ace4d9f27746f2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.timestamp",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "d43803f8bac685b6"
+            ]
+        ]
+    },
+    {
+        "id": "5376fae6dc0a9cbe",
+        "type": "mongodb4-client",
+        "name": "red",
+        "protocol": "mongodb",
+        "hostname": "127.0.0.1",
+        "port": "27017",
+        "dbName": "red",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-simple"
+    }
+]
