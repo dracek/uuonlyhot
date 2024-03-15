@@ -25,6 +25,16 @@
         "realization": "index.html",
         "httpMethod": "GET",
         "type": "UVE"
+      },
+      "temp": {
+        "realization": "api/controllers/OnlyhotMainController.temp",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "test": {
+        "realization": "api/controllers/OnlyhotMainController.test",
+        "httpMethod": "GET",
+        "type": "CMD"
       }
     }
   }
