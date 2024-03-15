@@ -38,6 +38,18 @@ const Init = {
   },
 };
 
+const test = {
+  UC_CODE: `${OnlyhotMainUseCaseError.ERROR_PREFIX}test/`,
+  InvalidDtoIn: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${test.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+};
+
 module.exports = {
+  test,
   Init,
 };
