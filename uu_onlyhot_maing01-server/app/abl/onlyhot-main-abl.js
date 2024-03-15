@@ -1,17 +1,21 @@
 "use strict";
+
 const { Validator } = require("uu_appg01_server").Validation;
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { Profile, AppClientTokenService, UuAppWorkspace, UuAppWorkspaceError } = require("uu_appg01_server").Workspace;
 const { UriBuilder } = require("uu_appg01_server").Uri;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
 const { AppClient } = require("uu_appg01_server");
 const Errors = require("../api/errors/onlyhot-main-error.js");
+const OnlyhotMainMongo = require("../dao/temp-mongo.js");
 
 const WARNINGS = {
   initUnsupportedKeys: {
     code: `${Errors.Init.UC_CODE}unsupportedKeys`,
   },
+  testUnsupportedKeys: {
+    code: `${Errors.test.UC_CODE}unsupportedKeys`
+  }
 };
 
 const logger = LoggerFactory.get("OnlyhotMainAbl");
