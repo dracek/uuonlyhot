@@ -15,12 +15,12 @@ const validator = Validator.load();
 async function temp(awid, dtoIn) {
   try {
     // Validace dtoIn
-    let validationResult = validator.validate("tempDtoInType", dtoIn);
-    ValidationHelper.processValidationResult(
-      dtoIn,
-      validationResult,
-      Errors.Temp.InvalidDtoIn
-    );
+    //let validationResult = validator.validate("tempDtoInType", dtoIn);
+    //ValidationHelper.processValidationResult(
+    //  dtoIn,
+    //  validationResult,
+    //  Errors.Temp.InvalidDtoIn
+   // );
 
     const { data } = dtoIn;
     const temperatureData = {
