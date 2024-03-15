@@ -11,3 +11,6 @@ const initDtoInType = shape({
     estimatedEndTime: datetime(),
   }),
 });
+const testDtoInType = shape({
+  code: string(20).isRequired()
+});
