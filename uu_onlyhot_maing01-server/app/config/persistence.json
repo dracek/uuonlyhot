@@ -6,6 +6,9 @@
       "schemaMap": {
         "onlyhotMain": {
           "realization": "dao/OnlyhotMainMongo"
+        },
+        "sensor": {
+          "realization": "dao/SensorMongo"
         }
       }
     }

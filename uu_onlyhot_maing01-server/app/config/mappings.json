@@ -25,6 +25,31 @@
         "realization": "index.html",
         "httpMethod": "GET",
         "type": "UVE"
+      },
+      "sensor/create": {
+        "realization": "api/controllers/SensorController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "sensor/update": {
+        "realization": "api/controllers/SensorController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "sensor/delete": {
+        "realization": "api/controllers/SensorController.delete",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "sensor/get": {
+        "realization": "api/controllers/SensorController.get",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "sensor/list": {
+        "realization": "api/controllers/SensorController.list",
+        "httpMethod": "GET",
+        "type": "CMD"
       }
     }
   }

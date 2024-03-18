@@ -24,7 +24,35 @@
       },
       "sys/uuAppWorkspace/initUve": {
         "sysStateList": ["created"],
-        "profileList": ["Public", "AwidLicenseOwner"]
+        "profileList": ["Public","AwidLicenseOwner"]
+      },
+      "temp": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "test": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "sensor/create": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "sensor/update": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "sensor/delete": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "sensor/get": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "sensor/list": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
       }
     }
   }
