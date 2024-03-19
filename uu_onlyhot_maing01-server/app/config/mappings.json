@@ -50,7 +50,17 @@
         "realization": "api/controllers/SensorController.list",
         "httpMethod": "GET",
         "type": "CMD"
-      }
+      },
+      "temp": {
+        "realization": "api/controllers/OnlyhotMainController.temp",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "test": {
+        "realization": "api/controllers/OnlyhotMainController.test",
+        "httpMethod": "GET",
+        "type": "CMD"
     }
   }
+}
 }
