@@ -2,13 +2,13 @@
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
-class OnlyhotMainMongo extends UuObjectDao {
+class TempMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1, timestamp: 1 }, { unique: true });
   }
 
-  async create(awid, temperatureData) {
-    return await super.insertOne(temperatureData, "temperatureData");
+  async create(temperatureData) {
+    return await super.insertOne(temperatureData);
   }
 
   // Pokud budete potřebovat další CRUD operace, jako je get, update a remove,
@@ -16,4 +16,4 @@ class OnlyhotMainMongo extends UuObjectDao {
 
 }
 
-module.exports = OnlyhotMainMongo;
+module.exports = TempMongo;
