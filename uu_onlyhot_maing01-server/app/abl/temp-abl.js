@@ -17,6 +17,28 @@ async function temp(awid, dtoIn) {
 
   for (const item of dtoIn.data) {
     // Vytvoření objektu s teplotními daty pro aktuální položku
+    let validationResult = this.validator.validate("tempDtoInType", dtoIn);
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      {},
+      WARNINGS.Create.UnsupportedKeys.code,
+      Errors.Create.InvalidDtoIn
+    );
+    let dtoOut;
+    try {
+      dtoIn.awid = awid;
+      dtoIn.ownerId = session.getIdentity().getUuIdentity();
+      dtoOut = await this.dao.temp(dtoIn);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Create.TempDaoFailed({ uuAppErrorMap }, e)
+      }
+      throw e;
+    }
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
     const temperatureData = {
         awid: awid,
         temperature: parseFloat(item.temperature),
@@ -29,7 +51,7 @@ async function temp(awid, dtoIn) {
   }
     return " ... huraaa ";
 
-}
+
 
 module.exports = {
   temp

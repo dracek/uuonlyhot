@@ -60,7 +60,37 @@
         "realization": "api/controllers/OnlyhotMainController.test",
         "httpMethod": "GET",
         "type": "CMD"
+      },
+      "temperature/create": {
+        "realization": "api/controllers/TemperatureController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "temperature/update": {
+        "realization": "api/controllers/TemperatureController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "temperature/delete": {
+        "realization": "api/controllers/TemperatureController.delete",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "temperature/get": {
+        "realization": "api/controllers/TemperatureController.get",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "temperature/list": {
+        "realization": "api/controllers/TemperatureController.list",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "temperature": {
+        "realization": "api/controllers/TemperatureController.temperature",
+        "httpMethod": "POST",
+        "type": "CMD"
+      }
     }
   }
-}
-}
+  }

@@ -52,6 +52,30 @@
       "sensor/list": {
         "sysStateList": ["active"],
         "profileList": ["Authenticated"]
+      },
+      "temperature/create": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "temperature/update": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "temperature/delete": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "temperature/get": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "stemperature/list": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "temperature": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
       }
     }
   }
