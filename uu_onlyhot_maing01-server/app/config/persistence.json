@@ -7,13 +7,14 @@
         "onlyhotMain": {
           "realization": "dao/OnlyhotMainMongo"
         },
-<<<<<<< HEAD
         "sensor": {
           "realization": "dao/SensorMongo"
-=======
+        },
         "temp": {
           "realization": "dao/TempMongo"
->>>>>>> 7a871e4 (Přidání komentáře k nedokončeným změnám)
+        },
+        "temperature": {
+          "realization": "dao/TemperatureMongo"
         }
       }
     }
