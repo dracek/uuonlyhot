@@ -1,6 +1,6 @@
 "use strict";
 const OnlyhotMainUseCaseError = require("./onlyhot-main-use-case-error.js");
-
+const TEMP_ERROR_PREFIX = `${OnlyhotMainUseCaseError.ERROR_PREFIX}temp/`;
 const Init = {
   UC_CODE: `${OnlyhotMainUseCaseError.ERROR_PREFIX}init/`,
 
@@ -49,7 +49,31 @@ const test = {
   },
 };
 
+const Temp = {
+  UC_CODE: `${OnlyhotMainUseCaseError.ERROR_PREFIX}temp/`,
+
+  InvalidDtoIn: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Temp.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid for temperature operation.";
+    }
+  },
+
+  TempDaoFailed: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.status = 500; // Můžete nastavit status podle vašich potřeb
+      this.code = `${Temp.UC_CODE}tempDaoFailed`;
+      this.message = "Failed to create temperature data in the database.";
+    }
+  },
+
+  // Další chybové třídy pro další případy chyb v operacích s teplotními daty
+};
+
 module.exports = {
   test,
   Init,
+  Temp
 };
