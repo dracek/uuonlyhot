@@ -1,8 +1,12 @@
 "use strict";
 const OnlyhotMainUseCaseError = require("./onlyhot-main-use-case-error.js");
 const TEMP_ERROR_PREFIX = `${OnlyhotMainUseCaseError.ERROR_PREFIX}temp/`;
+const INVALID_DTOIN = "DtoIn is not valid.";
+
 const Init = {
   UC_CODE: `${OnlyhotMainUseCaseError.ERROR_PREFIX}init/`,
+
+  
 
   InvalidDtoIn: class extends OnlyhotMainUseCaseError {
     constructor() {

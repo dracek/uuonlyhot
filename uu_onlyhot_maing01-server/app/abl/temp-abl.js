@@ -12,7 +12,7 @@ const validator = Validator.load();
 const WARNINGS = {
   Temp: {
     UnsupportedKeys: {
-      code: `${Errors.Create.UC_CODE}unsupportedKeys`,
+      code: `${Errors.Temp.UC_CODE}unsupportedKeys`,
     },
   },
 };
