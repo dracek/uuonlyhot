@@ -38,7 +38,7 @@ class Temp {
         validationResult,
         {},
         WARNINGS.Temp.UnsupportedKeys.code,
-        Errors.Create.InvalidDtoIn
+        Errors.Temp.InvalidDtoIn
       );
 
   
@@ -50,12 +50,12 @@ class Temp {
 
       let dtoOut;
       try {
-        dtoOut = await dao.temp(temperatureData);
+        dtoOut = await dao.temp(temperaturaData);
         dtoOut.uuAppErrorMap = uuAppErrorMap;
         result.push(dtoOut);
       } catch (e) {
         if (e instanceof ObjectStoreError) {
-          throw new Errors.Create.TempDaoFailed({ uuAppErrorMap }, e);
+          throw new Errors.Temp.TempDaoFailed({ uuAppErrorMap }, e);
         }
         throw e;
       }
