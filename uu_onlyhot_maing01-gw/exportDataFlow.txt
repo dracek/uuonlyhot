@@ -11,17 +11,17 @@
         "id": "e62f89401ab2af8d",
         "type": "debug",
         "z": "54ace4d9f27746f2",
-        "name": "debug data",
+        "name": "debug data payload",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload[0]",
+        "complete": "payload",
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 950,
-        "y": 300,
+        "x": 930,
+        "y": 400,
         "wires": []
     },
     {
@@ -36,11 +36,11 @@
         "maxTimeMS": "0",
         "handleDocId": false,
         "name": "",
-        "x": 700,
-        "y": 300,
+        "x": 520,
+        "y": 260,
         "wires": [
             [
-                "e62f89401ab2af8d"
+                "994ff61cd5b63d26"
             ]
         ]
     },
@@ -48,16 +48,16 @@
         "id": "d43803f8bac685b6",
         "type": "function",
         "z": "54ace4d9f27746f2",
-        "name": "function 3",
-        "func": "const pipeline = [    \n  {\n    $group:\n      {\n        _id: 1,\n        prumer: {$avg: \"$temperature\" },\n        count: { $sum: 1 }\n      }\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;",
+        "name": "prepare agg pipeline",
+        "func": "const periodInSeconds = 10 * 60;\n\nconst pipeline = [    \n  {\n    $match: { \n      sensorCode: msg.sensorCode\n    },\n  },\n  {\n    $set: {\n      roundedTimestamp: {\n        $add: [\n          { $subtract: [\"$timestamp\", {\n            $mod : [\"$timestamp\", periodInSeconds*1000]\n          }]},\n          periodInSeconds*1000\n        ],\n      }\n    }\n  },\n  {\n    $match: { \n      roundedTimestamp: { $lt: msg.payload.timestamp }\n    },\n  },\n  {\n    $group:\n      {\n        _id: \"$roundedTimestamp\",\n        temperature: {$avg: \"$temperature\" },\n        count: { $sum: 1 }\n      }\n  },\n  {\n    $set: {\n      timestamp: \"$_id\"\n    }\n  },\n  {\n    $unset: \"_id\",\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;\n\n\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 300,
+        "x": 300,
+        "y": 260,
         "wires": [
             [
                 "d554f67470a84459"
@@ -65,27 +65,142 @@
         ]
     },
     {
-        "id": "03f966e9140432dd",
-        "type": "inject",
+        "id": "d6582c9bb6de6257",
+        "type": "cronplus",
         "z": "54ace4d9f27746f2",
-        "name": "",
-        "props": [
+        "name": "Run!",
+        "outputField": "payload.timestamp",
+        "timeZone": "",
+        "storeName": "",
+        "commandResponseMsgOutput": "output1",
+        "defaultLocation": "",
+        "defaultLocationType": "default",
+        "outputs": 1,
+        "options": [
             {
-                "p": "payload.timestamp",
-                "v": "",
-                "vt": "date"
+                "name": "schedule1",
+                "topic": "topic1",
+                "payloadType": "date",
+                "payload": "",
+                "expressionType": "cron",
+                "expression": "0 2,17,32,47 * * * *",
+                "location": "",
+                "offset": "0",
+                "solarType": "all",
+                "solarEvents": "sunrise,sunset"
             }
         ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 170,
-        "y": 300,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "f38281fea5ea0821"
+            ]
+        ]
+    },
+    {
+        "id": "f38281fea5ea0821",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "forEach sensor",
+        "func": "const sensors = ['sen-1', 'fake-1']\n\nfor (let i = 0; i < sensors.length; i++) {\n        //node.warn(msg);\n        let clonedMsg = RED.util.cloneMessage(msg);\n        clonedMsg.sensorCode = sensors[i];\n        node.send(clonedMsg);\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 100,
         "wires": [
             [
                 "d43803f8bac685b6"
+            ]
+        ]
+    },
+    {
+        "id": "994ff61cd5b63d26",
+        "type": "switch",
+        "z": "54ace4d9f27746f2",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 430,
+        "y": 460,
+        "wires": [
+            [
+                "e27eba8c7fb62be4"
+            ],
+            [
+                "6f9194b042fe84b0"
+            ]
+        ]
+    },
+    {
+        "id": "6f9194b042fe84b0",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug empty",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "8d81bcd7d7861da8",
+        "type": "comment",
+        "z": "54ace4d9f27746f2",
+        "name": "Run every 15 minutes, one message per sensor",
+        "info": "",
+        "x": 260,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "328bbb346028a037",
+        "type": "comment",
+        "z": "54ace4d9f27746f2",
+        "name": "do not send empty data",
+        "info": "",
+        "x": 740,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e27eba8c7fb62be4",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "set sensorCode",
+        "func": "msg.payload = { sensorCode: msg.sensorCode, data: msg.payload };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 400,
+        "wires": [
+            [
+                "e62f89401ab2af8d"
             ]
         ]
     },
