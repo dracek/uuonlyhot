@@ -1,7 +1,5 @@
 "use strict";
 
-"use strict";
-
 const { Validator } = require("uu_appg01_server").Validation;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { Profile, AppClientTokenService, UuAppWorkspace, UuAppWorkspaceError } = require("uu_appg01_server").Workspace;
@@ -30,27 +28,19 @@ class Temp {
   async temp(awid, dtoIn) {
     const dao = DaoFactory.getDao("temp");
     let result = [];
-
-    for (const item of dtoIn.data) {
+    
       let validationResult = this.validator.validate("tempDtoInType", item);
-      let uuAppErrorMap = ValidationHelper.processValidationResult(
+       let uuAppErrorMap = ValidationHelper.processValidationResult(
         item,
         validationResult,
         {},
         WARNINGS.Temp.UnsupportedKeys.code,
         Errors.Temp.InvalidDtoIn
-      );
-
-  
-      const temperatureData = {
-        awid: awid,
-        temperature: parseFloat(item.temperature),
-        timestamp: item.timestamp,
-      };
-
+        );
+   
       let dtoOut;
       try {
-        dtoOut = await dao.temp(temperaturaData);
+        dtoOut = await dao.temp(temperatureData);
         dtoOut.uuAppErrorMap = uuAppErrorMap;
         result.push(dtoOut);
       } catch (e) {
@@ -60,8 +50,20 @@ class Temp {
         throw e;
       }
     }
-    return result;
-  }
+    async temp(awid, dtoIn) {
+      for (const item of dtoIn.data) {
+        const temperatureData = {
+          awid: awid,
+          temperature: parseFloat(item.temperature),
+          timestamp: item.timestamp,
+        };
+        const dao = DaoFactory.getDao("temp");
+        await dao.create(temperatureData);
+      }
+      return " ... huraaa ";
+    
+  };
+  
 }
 
 module.exports = new Temp();
