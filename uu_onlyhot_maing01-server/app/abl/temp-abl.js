@@ -26,9 +26,16 @@ class Temp {
   }
 
   async temp(awid, dtoIn) {
-    const dao = DaoFactory.getDao("temp");
-    let result = [];
-    
+      const dao = this.dao;
+      const result = []; 
+
+    for (const item of dtoIn.data) {
+      const temperatureData = {
+        awid: awid,
+        temperature: parseFloat(item.temperature),
+        timestamp: item.timestamp,
+      };
+      
       let validationResult = this.validator.validate("tempDtoInType", item);
        let uuAppErrorMap = ValidationHelper.processValidationResult(
         item,
@@ -50,20 +57,8 @@ class Temp {
         throw e;
       }
     }
-    async temp(awid, dtoIn) {
-      for (const item of dtoIn.data) {
-        const temperatureData = {
-          awid: awid,
-          temperature: parseFloat(item.temperature),
-          timestamp: item.timestamp,
-        };
-        const dao = DaoFactory.getDao("temp");
-        await dao.create(temperatureData);
-      }
       return " ... huraaa ";
-    
   };
-  
 }
 
 module.exports = new Temp();
