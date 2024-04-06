@@ -39,6 +39,33 @@ const Calls = {
     return await Calls.getWorkspace();
   },
 
+
+  sensorCreate(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/create");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  sensorGet(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/get");
+    return Calls.call("get", commandUri, dtoIn);
+  },
+
+  sensorUpdate(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/update");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  sensorDelete(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/delete");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  sensorList(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/list");
+    return Calls.call("get", commandUri, dtoIn);
+  },
+
+
   getCommandUri(useCase, baseUri = Environment.appBaseUri) {
     return (!baseUri.endsWith("/") ? baseUri + "/" : baseUri) + (useCase.startsWith("/") ? useCase.slice(1) : useCase);
   },

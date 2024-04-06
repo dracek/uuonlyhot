@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, useSession, Lsi } from "uu5g05";
+import { Utils, createVisualComponent, useSession, useContext, useEffect, Lsi } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Plus4U5Elements from "uu_plus4u5g02-elements";
 import { withRoute } from "uu_plus4u5g02-app";
@@ -8,6 +8,8 @@ import Config from "./config/config.js";
 import WelcomeRow from "../bricks/welcome-row.js";
 import RouteBar from "../core/route-bar.js";
 import importLsi from "../lsi/import-lsi.js";
+
+import SensorContext from "../bricks/sensor/sensor-context.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -42,6 +44,14 @@ let Home = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { identity } = useSession();
+
+    const sensors = useContext(SensorContext);
+    console.log(sensors);
+
+    useEffect(() => {
+      sensors.callsMap.sensorList();
+    }, []);
+
     //@@viewOff:private
 
     //@@viewOn:interface
@@ -49,6 +59,8 @@ let Home = createVisualComponent({
 
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
+    console.log(sensors.data, sensors.listData);
+
     return (
       <div {...attrs}>
         <RouteBar />
