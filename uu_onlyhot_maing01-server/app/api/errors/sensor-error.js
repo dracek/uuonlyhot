@@ -4,7 +4,8 @@ const OnlyhotMainUseCaseError = require("./onlyhot-main-use-case-error.js");
 const SENSOR_ERROR_PREFIX = `${OnlyhotMainUseCaseError.ERROR_PREFIX}sensor/`;
 
 const INVALID_DTOIN = "DtoIn is not valid.";
-const NOT_PRESENT = "Sensor is not present";
+const NOT_PRESENT = "Sensor is not present.";
+const DUPLICATE_SENSOR_CODE = "Sensor code already exists.";
 const NOT_OWNER = "You are not owner of this sensor.";
 
 const Create = {
@@ -15,6 +16,14 @@ const Create = {
       super(...arguments);
       this.code = `${Create.UC_CODE}invalidDtoIn`;
       this.message = INVALID_DTOIN;
+    }
+  },
+
+  SensorDuplicateCode: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}sensorDuplicateCode`;
+      this.message = DUPLICATE_SENSOR_CODE;
     }
   },
 
@@ -44,6 +53,14 @@ const Update = {
       super(...arguments);
       this.code = `${Update.UC_CODE}sensorNotPresent`;
       this.message = NOT_PRESENT;
+    }
+  },
+
+  SensorDuplicateCode: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}sensorDuplicateCode`;
+      this.message = DUPLICATE_SENSOR_CODE;
     }
   },
 

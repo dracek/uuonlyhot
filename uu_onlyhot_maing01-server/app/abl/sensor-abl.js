@@ -60,7 +60,10 @@ class SensorAbl {
 
     let dtoOut;
 
-    // todo check duplic. sensorCode  
+    const existing = await this.dao.getBySensorCode(awid, dtoIn.sensorCode);
+    if (existing !== null){
+      throw new Errors.Create.SensorDuplicateCode({ uuAppErrorMap });
+    }  
 
     try {
         dtoIn.awid = awid;
@@ -118,11 +121,14 @@ class SensorAbl {
       throw new Errors.Update.SensorNotPresent({ uuAppErrorMap });  
     }
 
+    const existing = await this.dao.getBySensorCode(awid, dtoIn.sensorCode);
+    if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
+      throw new Errors.Update.SensorDuplicateCode({ uuAppErrorMap });
+    }  
+
     if (entity.ownerId != session.getIdentity().getUuIdentity()){
       throw new Errors.Update.NotOwner({ uuAppErrorMap });  
     }
-
-    // todo check duplic. sensorCode  
 
     let dtoOut;
     try {
@@ -159,6 +165,8 @@ class SensorAbl {
     if (entity.ownerId != session.getIdentity().getUuIdentity()){
       throw new Errors.Delete.NotOwner({ uuAppErrorMap });  
     }
+
+    // todo delete also graph data
 
     await this.dao.remove(awid, dtoIn.id);
 
