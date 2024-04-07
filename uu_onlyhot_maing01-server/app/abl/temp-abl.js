@@ -28,9 +28,9 @@ class Temp {
     const dao = this.dao;
     const result = [];
 
-    let validationResult = this.validator.validate("tempDtoInType", dtoIn.data);
+    let validationResult = this.validator.validate("tempDtoInType", dtoIn);
     let uuAppErrorMap = ValidationHelper.processValidationResult(
-      dtoIn.data,
+      dtoIn,
       validationResult,
       {},
       WARNINGS.Temp.UnsupportedKeys.code,
@@ -38,7 +38,7 @@ class Temp {
     );
 
     try {
-      dtoOut = await dao.temp(temperatureData);
+      dtoOut = await this.dao.temp(temperatureData);
       dtoOut.uuAppErrorMap = uuAppErrorMap;
       result.push(dtoOut);
     } catch (e) {

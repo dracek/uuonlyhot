@@ -15,11 +15,11 @@ const initDtoInType = shape({
 const testDtoInType = shape({
   code: string(20).isRequired()
 });
-const tempDtoInItem = shape({
-  timestamp: number().isRequired(),
-  temperature: string().isRequired()
-});
-
 const tempDtoInType = shape({
-  data: array(tempDtoInItem).isRequired()
+  data: array(
+    shape({
+      timestamp: number().isRequired(),
+      temperature: string().isRequired(),
+    })
+  ).isRequired(),
 });
