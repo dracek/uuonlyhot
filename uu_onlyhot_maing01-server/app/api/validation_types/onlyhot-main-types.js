@@ -16,6 +16,7 @@ const testDtoInType = shape({
   code: string(20).isRequired()
 });
 const tempDtoInType = shape({
+  sensorCode: number().isRequired(),
   data: array(
     shape({
       timestamp: number().isRequired(),
