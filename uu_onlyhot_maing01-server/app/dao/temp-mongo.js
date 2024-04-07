@@ -3,7 +3,7 @@
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
 class TempMongo extends UuObjectDao {
-  async createSchema() {
+  async temp() {
     await super.createIndex({ awid: 1, timestamp: 1 }, { unique: true });
   }
 
