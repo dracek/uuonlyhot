@@ -9,6 +9,9 @@
         },
         "sensor": {
           "realization": "dao/SensorMongo"
+        },
+        "gateway": {
+          "realization": "dao/GatewayMongo"
         }
       }
     }

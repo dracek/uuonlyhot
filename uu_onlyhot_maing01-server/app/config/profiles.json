@@ -1,15 +1,15 @@
 {
   "{asid}": {
-    "profileList": ["AsidAuthorities", "AsidExecutives", "AsidLicenseOwner", "Public"],
+    "profileList": ["AsidAuthorities","AsidExecutives","AsidLicenseOwner","Public"],
     "useCaseMap": {
     }
   },
   "*": {
-    "profileList": ["Authorities", "Executives", "AwidLicenseOwner", "Public", "Authenticated", "AwidInitiator"],
+    "profileList": ["Authorities","Executives","AwidLicenseOwner","Public","Authenticated","AwidInitiator"],
     "useCaseMap": {
       "sys/uuAppWorkspace/init": {
-        "sysStateList": ["created", "assigned"],
-        "profileList": ["AwidLicenseOwner", "AwidInitiator"]
+        "sysStateList": ["created","assigned"],
+        "profileList": ["AwidLicenseOwner","AwidInitiator"]
       },
       "sys/uuAppWorkspace/load": {
         "sysStateList": ["active"],
@@ -51,6 +51,26 @@
         "profileList": ["Authenticated"]
       },
       "sensor/list": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "gateway/get": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "gateway/create": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "gateway/delete": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "gateway/list": {
+        "sysStateList": ["active"],
+        "profileList": ["Authenticated"]
+      },
+      "gateway/update": {
         "sysStateList": ["active"],
         "profileList": ["Authenticated"]
       }
