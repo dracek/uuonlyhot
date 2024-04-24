@@ -64,7 +64,9 @@ class GatewayAbl {
     }
 
     const existing = await this.dao.getByName(awid, dtoIn.name);
-    if (existing !== null){
+    if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
+      console.log(existing);
+      console.log(dtoIn);
       throw new Errors.Update.DuplicateName({ uuAppErrorMap });
     }  
 

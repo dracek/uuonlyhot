@@ -17,5 +17,6 @@ const gatewayDeleteDtoInType = shape({
 
 const gatewayUpdateDtoInType = shape({
     id: string().isRequired(),
-    name: string().isRequired()
+    name: string(),
+    password: string()
 });
