@@ -43,6 +43,7 @@ class SensorAbl {
   constructor() {
     this.validator = Validator.load();
     this.dao = DaoFactory.getDao("sensor");
+    this.gatewayDao = DaoFactory.getDao("gateway");
   }
 
 
@@ -60,14 +61,18 @@ class SensorAbl {
 
     let dtoOut;
 
-    const existing = await this.dao.getBySensorCode(awid, dtoIn.sensorCode);
+    const existing = await this.dao.getByCode(awid, dtoIn.code);
     if (existing !== null){
       throw new Errors.Create.SensorDuplicateCode({ uuAppErrorMap });
-    }  
+    }
+
+    const gateway = await this.gatewayDao.get(awid, dtoIn.gatewayId);
+    if (gateway === null){
+      throw new Errors.Create.GatewayNotExist({ uuAppErrorMap });
+    } 
 
     try {
         dtoIn.awid = awid;
-        dtoIn.ownerId = session.getIdentity().getUuIdentity();
         dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
         if (e instanceof ObjectStoreError) {
@@ -94,8 +99,6 @@ class SensorAbl {
 
     let dtoOut = await this.dao.get(awid, dtoIn.id);
 
-    //todo check sensor owner or public  
-
     if (!dtoOut) {
       throw new Errors.Get.SensorNotPresent({ uuAppErrorMap });
     }
@@ -121,14 +124,10 @@ class SensorAbl {
       throw new Errors.Update.SensorNotPresent({ uuAppErrorMap });  
     }
 
-    const existing = await this.dao.getBySensorCode(awid, dtoIn.sensorCode);
+    const existing = await this.dao.getByCode(awid, dtoIn.code);
     if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
       throw new Errors.Update.SensorDuplicateCode({ uuAppErrorMap });
     }  
-
-    if (entity.ownerId != session.getIdentity().getUuIdentity()){
-      throw new Errors.Update.NotOwner({ uuAppErrorMap });  
-    }
 
     let dtoOut;
     try {
@@ -160,10 +159,6 @@ class SensorAbl {
     let entity = await this.dao.get(awid, dtoIn.id);
     if (!entity){
       throw new Errors.Delete.SensorNotPresent({ uuAppErrorMap });  
-    }
-
-    if (entity.ownerId != session.getIdentity().getUuIdentity()){
-      throw new Errors.Delete.NotOwner({ uuAppErrorMap });  
     }
 
     // todo delete also graph data

@@ -19,10 +19,10 @@ class SensorMongo extends UuObjectDao {
     return await super.findOne(filter);
   }
 
-  async getBySensorCode(awid, sensorCode) {
+  async getByCode(awid, code) {
     let filter = {
       awid: awid,
-      sensorCode: sensorCode,
+      code: code,
     };
     return await super.findOne(filter);
   }

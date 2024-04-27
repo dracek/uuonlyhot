@@ -6,7 +6,6 @@ const SENSOR_ERROR_PREFIX = `${OnlyhotMainUseCaseError.ERROR_PREFIX}sensor/`;
 const INVALID_DTOIN = "DtoIn is not valid.";
 const NOT_PRESENT = "Sensor is not present.";
 const DUPLICATE_SENSOR_CODE = "Sensor code already exists.";
-const NOT_OWNER = "You are not owner of this sensor.";
 
 const Create = {
   UC_CODE: `${SENSOR_ERROR_PREFIX}create/`,
@@ -24,6 +23,14 @@ const Create = {
       super(...arguments);
       this.code = `${Create.UC_CODE}sensorDuplicateCode`;
       this.message = DUPLICATE_SENSOR_CODE;
+    }
+  },
+
+  GatewayNotExist: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}gatewayNotExist`;
+      this.message = "Gateway does not exist.";
     }
   },
 
@@ -71,14 +78,6 @@ const Update = {
       this.message = "Update failed in DAO";
     }
   },
-
-  NotOwner: class extends OnlyhotMainUseCaseError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Update.UC_CODE}notOwner`;
-      this.message = NOT_OWNER;
-    }
-  },
   
 };
 
@@ -98,14 +97,6 @@ const Delete = {
       super(...arguments);
       this.code = `${Delete.UC_CODE}sensorNotPresent`;
       this.message = NOT_PRESENT;
-    }
-  },
-
-  NotOwner: class extends OnlyhotMainUseCaseError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Delete.UC_CODE}notOwner`;
-      this.message = NOT_OWNER;
     }
   },
   

@@ -1,9 +1,9 @@
 /* eslint-disable */
 
 const sensorCreateDtoInType = shape({
-    sensorCode: string().isRequired(),
-    enabled: boolean().isRequired(),
-    public: boolean().isRequired()
+    gatewayId: string().isRequired(),
+    code: string().isRequired(),
+    name: string().isRequired(),
 });
 
 const sensorGetDtoInType = shape({
@@ -12,9 +12,8 @@ const sensorGetDtoInType = shape({
 
 const sensorUpdateDtoInType = shape({
     id: string().isRequired(),
-    sensorCode: string().isRequired(),
-    enabled: boolean().isRequired(),
-    public: boolean().isRequired()
+    code: string().isRequired(),
+    name: string().isRequired(),
 });
 
 const sensorDeleteDtoInType = shape({
@@ -22,5 +21,5 @@ const sensorDeleteDtoInType = shape({
 });
 
 const sensorListDtoInType = shape({
-
+    gatewayId: string()
 });
