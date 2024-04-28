@@ -10,6 +10,10 @@ import importLsi from "../lsi/import-lsi.js";
 
 import SensorContext from "../bricks/sensor/sensor-context.js";
 
+import 'chart.js/auto';
+import { Chart } from 'react-chartjs-2';
+
+
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -74,12 +78,76 @@ let Sensor = createVisualComponent({
 
     const attrs = Utils.VisualComponent.getAttrs(props);
 
+
+    let chartdata = [    // todo order!
+    {
+      "timestamp" : 1712415600000.0,
+      "temperature" : 13.545,
+    },
+    {
+        "timestamp" : 1712333400000.0,
+        "temperature" : 12.475000000000001,
+    },
+    {
+        "timestamp" : 1712358200000.0,
+        "temperature" : 7.630000000000001,
+    },
+    {
+        "timestamp" : 1713234200000.0,
+        "temperature" : 10.305,
+    },
+    {
+      "timestamp" : 1712333400000.0,
+      "temperature" : 15,
+  },
+  {
+      "timestamp" : 1712358200000.0,
+      "temperature" : 2,
+  },
+  {
+      "timestamp" : 1713234200000.0,
+      "temperature" : -5,
+  }];
+
+
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Teploty - denní graf',
+        },
+      },
+    };
+
+    const labels = chartdata.map(row => {
+      const d = new Date(row.timestamp);
+      return d.toLocaleTimeString();
+    });    
+    
+    const data = {
+      labels,
+      datasets: [
+        {
+          //label: 'Dataset 1',
+          data: chartdata.map(row => row.temperature),
+          backgroundColor: 'rgba(127,127,255, 0.5)',
+        }
+      ],
+    };
+
+
     return (
       <div {...attrs}>
         <RouteBar />
         <div className={Css.box()}>
           <h1>Sensor {props.params.id}</h1>
-          <div>todo nějaké detaily, edit, grafy</div>
+          <div>todo nějaké detaily, edit, grafy...</div>
+          <Chart type='bar' options={options} data={data} />
         </div>
       </div>
     );
