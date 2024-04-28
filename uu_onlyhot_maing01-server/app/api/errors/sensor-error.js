@@ -157,7 +157,13 @@ const ImportData = {
   
 };
 
+const GetData = {
+  UC_CODE: `${SENSOR_ERROR_PREFIX}getData/`,
+  
+};
+
 module.exports = {
+  GetData,
   ImportData,
   List,
   Get,

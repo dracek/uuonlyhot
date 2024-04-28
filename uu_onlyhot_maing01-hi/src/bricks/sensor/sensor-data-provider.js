@@ -37,6 +37,7 @@ const SensorDataProvider = createComponent({
     const [status, setStatus] = useState(STATUS_DONE);
     const [data, setData] = useState({});
     const [listData, setListData] = useState({});
+    const [sensorData, setSensorData] = useState({});
     const { addAlert } = useAlertBus();
 
     function infoMsg(msg){
@@ -106,33 +107,32 @@ const SensorDataProvider = createComponent({
     }  
 
     async function sensorList() {
-        try {
-          setStatus(STATUS_WAITING);
-          let res = await Calls.sensorList({});
-          setStatus(STATUS_DONE);
-          setListData(res);
-        } catch (error) {
-          setStatus(STATUS_ERROR);
-          alertMsg({message: 'Cannot list sensors.'})
-          //console.error("NOT GOOD", error);
-        }
-      }
-
-
-
-    async function saveUserSetting(data) {
       try {
         setStatus(STATUS_WAITING);
-        let res = await Calls.saveUserSetting({ id: identity.uuIdentity, ...data });
+        let res = await Calls.sensorList({});
         setStatus(STATUS_DONE);
-        setData(res);
-        infoMsg({message: 'Successfully saved.'})
+        setListData(res);
       } catch (error) {
         setStatus(STATUS_ERROR);
-        alertMsg({message: 'Cannot save user settings.'})
+        alertMsg({message: 'Cannot list sensors.'})
         //console.error("NOT GOOD", error);
       }
     }
+
+    async function sensorGetData(dtoIn) {
+      try {
+        setStatus(STATUS_WAITING);
+        let res = await Calls.sensorGetData(dtoIn);
+        setStatus(STATUS_DONE);
+        setSensorData(res);
+      } catch (error) {
+        setStatus(STATUS_ERROR);
+        alertMsg({message: 'Cannot list sensor data.'})
+        //console.error("NOT GOOD", error);
+      }
+    }
+
+
     //@@viewOff:private
 
     //@@viewOn:interface
@@ -143,12 +143,14 @@ const SensorDataProvider = createComponent({
       status: status, 
       data,
       listData,
+      sensorData,
       callsMap: {
         sensorList,
         sensorCreate,
         sensorGet,
         sensorUpdate,
-        sensorDelete
+        sensorDelete,
+        sensorGetData
       }
     };
 

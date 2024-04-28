@@ -53,6 +53,40 @@ class SensorAbl {
     this.dataDao = DaoFactory.getDao("data");
   }
 
+  async getData(awid, session, dtoIn) {
+
+    // todo validace!
+
+    // todo sensor exist!
+
+    console.log(dtoIn);
+
+    let filter = { $and: [
+        //{ "sensorId": { $eq: dtoIn.sensorId }}, todo fix objectId!!!!
+        { "timestamp": { $gte: Number(dtoIn.from) }},  // fix number to string  FE calls auto conversion!
+        { "timestamp": { $lt: Number(dtoIn.to) }}
+      ]};
+
+    let dtoOut;
+    try {
+      dtoOut = await this.dataDao.listByFilter(awid, filter, {}, { timestamp: 1}) ;
+
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        //todo another error
+        //throw new Errors.List.ListDaoFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
+
+    dtoOut.itemList = dtoOut.itemList.map(item => ({ "timestamp": item.timestamp, "temperature": item.temperature }));
+
+    //dtoOut.uuAppErrorMap = {};
+
+    return dtoOut;
+   
+  }
+
   async importData(awid, session, dtoIn) {
 
     // todo: gateway a autorizace bude řešená přes middleware, v tuto chvíli očekáváme v ABL validní gateway (není potřeba ji ověřovat)
@@ -81,7 +115,7 @@ class SensorAbl {
     dtoIn.data.forEach(element => {
       const item = {
         awid: awid,
-        sensorId: sensor.id,
+        sensorId: sensor.id.toString(),
         timestamp : element.timestamp,
         temperature: element.temperature
       };

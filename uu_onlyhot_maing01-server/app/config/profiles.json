@@ -76,6 +76,10 @@
       "sensor/importData": {
         "sysStateList": ["active"],
         "profileList": ["Public"]
+      },
+      "sensor/getData": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
       }
     }
   }

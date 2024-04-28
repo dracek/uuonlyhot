@@ -24,7 +24,12 @@ class DataMongo extends UuObjectDao {
       return await super.findOneAndUpdate(filter, uuObject, "NONE");
     }
   }
+  
+  async listByFilter(awid, filter, pageInfo = {}, sortBy = {}, projection = {}) {
+    return await super.find({ awid, ...filter}, pageInfo, sortBy, projection);
+  }
 
+  
   // TODO remove unused
 
   async get(awid, id) {
@@ -59,9 +64,6 @@ class DataMongo extends UuObjectDao {
     return await super.deleteOne(filter);
   }
 
-  async listByFilter(awid, filter, pageInfo = {}, sortBy = {}, projection = {}) {
-    return await super.find({ awid, ...filter}, pageInfo, sortBy, projection);
-  }
 
 }
 

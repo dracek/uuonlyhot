@@ -80,6 +80,11 @@
         "realization": "api/controllers/SensorController.importData",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "sensor/getData": {
+        "realization": "api/controllers/SensorController.getData",
+        "httpMethod": "GET",
+        "type": "CMD"
       }
     }
   }

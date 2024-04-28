@@ -89,6 +89,11 @@ const Calls = {
     return Calls.call("get", commandUri, dtoIn);
   },
 
+  sensorGetData(dtoIn) {
+    let commandUri = Calls.getCommandUri("sensor/getData");
+    return Calls.call("get", commandUri, dtoIn);
+  },
+
 
   getCommandUri(useCase, baseUri = Environment.appBaseUri) {
     return (!baseUri.endsWith("/") ? baseUri + "/" : baseUri) + (useCase.startsWith("/") ? useCase.slice(1) : useCase);

@@ -62,11 +62,16 @@ let Sensor = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { identity } = useSession();
-    //const sensorContext = useContext(SensorContext);
+    const sensorContext = useContext(SensorContext);
 
     useEffect(() => {
-      //gatewayContext.callsMap.gatewayList();
-      //sensorContext.callsMap.sensorList();
+      sensorContext.callsMap.sensorGetData(
+        { 
+          "sensorId": props.params.id,
+          "from": 1714255200000,
+          "to": 1714341600000
+        }
+      );
     }, []);
 
     //@@viewOff:private
@@ -79,36 +84,7 @@ let Sensor = createVisualComponent({
     const attrs = Utils.VisualComponent.getAttrs(props);
 
 
-    let chartdata = [    // todo order!
-    {
-      "timestamp" : 1712415600000.0,
-      "temperature" : 13.545,
-    },
-    {
-        "timestamp" : 1712333400000.0,
-        "temperature" : 12.475000000000001,
-    },
-    {
-        "timestamp" : 1712358200000.0,
-        "temperature" : 7.630000000000001,
-    },
-    {
-        "timestamp" : 1713234200000.0,
-        "temperature" : 10.305,
-    },
-    {
-      "timestamp" : 1712333400000.0,
-      "temperature" : 15,
-  },
-  {
-      "timestamp" : 1712358200000.0,
-      "temperature" : 2,
-  },
-  {
-      "timestamp" : 1713234200000.0,
-      "temperature" : -5,
-  }];
-
+    let chartdata = sensorContext.sensorData && sensorContext.sensorData.itemList || [];
 
     const options = {
       responsive: true,
@@ -124,9 +100,11 @@ let Sensor = createVisualComponent({
       },
     };
 
+    const formatter = new Intl.DateTimeFormat('cs-CZ', { hour: '2-digit', minute: '2-digit'});
+
     const labels = chartdata.map(row => {
       const d = new Date(row.timestamp);
-      return d.toLocaleTimeString();
+      return formatter.format(d);
     });    
     
     const data = {
@@ -134,7 +112,7 @@ let Sensor = createVisualComponent({
       datasets: [
         {
           //label: 'Dataset 1',
-          data: chartdata.map(row => row.temperature),
+          data: chartdata.map(row => row.temperature.toFixed(1)),
           backgroundColor: 'rgba(127,127,255, 0.5)',
         }
       ],
