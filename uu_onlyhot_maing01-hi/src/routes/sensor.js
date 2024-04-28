@@ -8,9 +8,8 @@ import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 import importLsi from "../lsi/import-lsi.js";
 
-import GatewayContext from "../bricks/gateway/gateway-context.js";
 import SensorContext from "../bricks/sensor/sensor-context.js";
-import GatewayRow from "../bricks/gateway/gateway-row.js";
+
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -42,9 +41,9 @@ const Css = {
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-let Home = createVisualComponent({
+let Sensor = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "Home",
+  uu5Tag: Config.TAG + "Sensor",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -59,13 +58,11 @@ let Home = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const { identity } = useSession();
-
-    const gatewayContext = useContext(GatewayContext);
-    const sensorContext = useContext(SensorContext);
+    //const sensorContext = useContext(SensorContext);
 
     useEffect(() => {
-      gatewayContext.callsMap.gatewayList();
-      sensorContext.callsMap.sensorList();
+      //gatewayContext.callsMap.gatewayList();
+      //sensorContext.callsMap.sensorList();
     }, []);
 
     //@@viewOff:private
@@ -75,26 +72,14 @@ let Home = createVisualComponent({
 
     //@@viewOn:render
 
-    const renderGateways = (data, sensorData) => {
-      if (!data.itemList || data.itemList.length === 0){
-        return <div>no data ...</div>;
-      }
-      return (<div>{
-        data.itemList.map((gateway) => {
-          const sensors = sensorData.itemList ? sensorData.itemList.filter(sen => sen.gatewayId === gateway.id) : [];
-          return <GatewayRow gateway={gateway} sensors={sensors}/>
-        })
-      }</div>);
-    };
-
     const attrs = Utils.VisualComponent.getAttrs(props);
 
     return (
       <div {...attrs}>
         <RouteBar />
         <div className={Css.box()}>
-          <h1>Gateways</h1>
-          {renderGateways(gatewayContext.listData, sensorContext.listData)}
+          <h1>Sensor {props.params.id}</h1>
+          <div>todo nějaké detaily, edit, grafy</div>
         </div>
       </div>
     );
@@ -102,9 +87,9 @@ let Home = createVisualComponent({
   },
 });
 
-Home = withRoute(Home, { authenticated: true });
+Sensor = withRoute(Sensor, { authenticated: true });
 
 //@@viewOn:exports
-export { Home };
-export default Home;
+export { Sensor };
+export default Sensor;
 //@@viewOff:exports

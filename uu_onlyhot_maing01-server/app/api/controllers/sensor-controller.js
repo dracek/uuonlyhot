@@ -3,6 +3,10 @@ const SensorAbl = require("../../abl/sensor-abl.js");
 
 class SensorController {
 
+  importData(ucEnv) {
+    return SensorAbl.importData(ucEnv.getUri().getAwid(), ucEnv.getSession(), ucEnv.getDtoIn());
+  }
+
   list(ucEnv) {
     return SensorAbl.list(ucEnv.getUri().getAwid(), ucEnv.getSession(), ucEnv.getDtoIn());
   }

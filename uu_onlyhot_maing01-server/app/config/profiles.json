@@ -1,8 +1,7 @@
 {
   "{asid}": {
     "profileList": ["AsidAuthorities","AsidExecutives","AsidLicenseOwner","Public"],
-    "useCaseMap": {
-    }
+    "useCaseMap": {}
   },
   "*": {
     "profileList": ["Authorities","Executives","AwidLicenseOwner","Public","Authenticated","AwidInitiator"],
@@ -73,6 +72,10 @@
       "gateway/update": {
         "sysStateList": ["active"],
         "profileList": ["Authenticated"]
+      },
+      "sensor/importData": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
       }
     }
   }

@@ -75,6 +75,11 @@
         "realization": "api/controllers/GatewayController.update",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "sensor/importData": {
+        "realization": "api/controllers/SensorController.importData",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }

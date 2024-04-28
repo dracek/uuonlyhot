@@ -35,6 +35,12 @@ const WARNINGS = {
     UnsupportedKeys: {
       code: `${Errors.List.UC_CODE}unsupportedKeys`,
     },
+  },
+
+  ImportData: {
+    UnsupportedKeys: {
+      code: `${Errors.ImportData.UC_CODE}unsupportedKeys`,
+    },
   }
 };
 
@@ -44,6 +50,47 @@ class SensorAbl {
     this.validator = Validator.load();
     this.dao = DaoFactory.getDao("sensor");
     this.gatewayDao = DaoFactory.getDao("gateway");
+    this.dataDao = DaoFactory.getDao("data");
+  }
+
+  async importData(awid, session, dtoIn) {
+
+    // todo: gateway a autorizace bude řešená přes middleware, v tuto chvíli očekáváme v ABL validní gateway (není potřeba ji ověřovat)
+
+    let validationResult = this.validator.validate("sensorImportDataDtoInType", dtoIn);
+    
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+        dtoIn,
+        validationResult,
+        {},
+        WARNINGS.ImportData.UnsupportedKeys.code,
+        Errors.ImportData.InvalidDtoIn
+        );
+
+    let dtoOut = {
+      code: dtoIn.code,
+      lastTimestamp: dtoIn.data.length > 0 ? Math.max(...dtoIn.data.map(d => d.timestamp)) : null
+    };
+     
+    let sensor = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
+    if (sensor === null){
+      //todo try catch
+      sensor = await this.dao.create({awid, gatewayId: dtoIn.gatewayId, code: dtoIn.code});
+    }
+
+    dtoIn.data.forEach(element => {
+      const item = {
+        awid: awid,
+        sensorId: sensor.id,
+        timestamp : element.timestamp,
+        temperature: element.temperature
+      };
+      //todo try catch
+      this.dataDao.upsert(item); 
+    });
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
   }
 
 
@@ -61,7 +108,7 @@ class SensorAbl {
 
     let dtoOut;
 
-    const existing = await this.dao.getByCode(awid, dtoIn.code);
+    const existing = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
     if (existing !== null){
       throw new Errors.Create.SensorDuplicateCode({ uuAppErrorMap });
     }
@@ -124,7 +171,7 @@ class SensorAbl {
       throw new Errors.Update.SensorNotPresent({ uuAppErrorMap });  
     }
 
-    const existing = await this.dao.getByCode(awid, dtoIn.code);
+    const existing = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
     if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
       throw new Errors.Update.SensorDuplicateCode({ uuAppErrorMap });
     }  

@@ -1,7 +1,7 @@
 "use strict";
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
-class SensorMongo extends UuObjectDao {
+class DataMongo extends UuObjectDao {
 
   async createSchema(){
     await super.createIndex({ awid: 1, id: 1 }, { unique: true });
@@ -10,7 +10,23 @@ class SensorMongo extends UuObjectDao {
   async create(uuObject) {
     return await super.insertOne(uuObject);
   }
-  
+
+  async upsert(uuObject) {
+    const filter = {
+      awid: uuObject.awid,
+      sensorId: uuObject.sensorId,
+      timestamp: uuObject.timestamp
+    };
+    const existing = await super.findOne(filter);
+    if (existing === null){
+      return await super.insertOne(uuObject);
+    } else {
+      return await super.findOneAndUpdate(filter, uuObject, "NONE");
+    }
+  }
+
+  // TODO remove unused
+
   async get(awid, id) {
     let filter = {
       awid: awid,
@@ -19,11 +35,10 @@ class SensorMongo extends UuObjectDao {
     return await super.findOne(filter);
   }
 
-  async getByCode(awid, gatewayId, code) {
+  async getByName(awid, name) {
     let filter = {
       awid: awid,
-      gatewayId: gatewayId,
-      code: code,
+      name: name,
     };
     return await super.findOne(filter);
   }
@@ -50,4 +65,4 @@ class SensorMongo extends UuObjectDao {
 
 }
 
-module.exports = SensorMongo;
+module.exports = DataMongo;

@@ -144,7 +144,21 @@ const List = {
   
 };
 
+const ImportData = {
+  UC_CODE: `${SENSOR_ERROR_PREFIX}importData/`,
+
+  InvalidDtoIn: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ImportData.UC_CODE}invalidDtoIn`;
+      this.message = INVALID_DTOIN;
+    }
+  },
+  
+};
+
 module.exports = {
+  ImportData,
   List,
   Get,
   Delete,

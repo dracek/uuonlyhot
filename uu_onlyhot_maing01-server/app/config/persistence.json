@@ -12,6 +12,9 @@
         },
         "gateway": {
           "realization": "dao/GatewayMongo"
+        },
+        "data": {
+          "realization": "dao/DataMongo"
         }
       }
     }

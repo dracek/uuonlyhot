@@ -39,6 +39,30 @@ const Calls = {
     return await Calls.getWorkspace();
   },
 
+  gatewayCreate(dtoIn) {
+    let commandUri = Calls.getCommandUri("gateway/create");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  gatewayGet(dtoIn) {
+    let commandUri = Calls.getCommandUri("gateway/get");
+    return Calls.call("get", commandUri, dtoIn);
+  },
+
+  gatewayUpdate(dtoIn) {
+    let commandUri = Calls.getCommandUri("gateway/update");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  gatewayDelete(dtoIn) {
+    let commandUri = Calls.getCommandUri("gateway/delete");
+    return Calls.call("post", commandUri, dtoIn);
+  },
+
+  gatewayList(dtoIn) {
+    let commandUri = Calls.getCommandUri("gateway/list");
+    return Calls.call("get", commandUri, dtoIn);
+  },
 
   sensorCreate(dtoIn) {
     let commandUri = Calls.getCommandUri("sensor/create");
