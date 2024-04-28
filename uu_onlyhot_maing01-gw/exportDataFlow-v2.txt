@@ -1,0 +1,344 @@
+[
+    {
+        "id": "54ace4d9f27746f2",
+        "type": "tab",
+        "label": "Export average data",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e62f89401ab2af8d",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug delete old data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "d554f67470a84459",
+        "type": "mongodb4",
+        "z": "54ace4d9f27746f2",
+        "clientNode": "5376fae6dc0a9cbe",
+        "mode": "collection",
+        "collection": "data",
+        "operation": "aggregate",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "",
+        "x": 600,
+        "y": 100,
+        "wires": [
+            [
+                "994ff61cd5b63d26"
+            ]
+        ]
+    },
+    {
+        "id": "d43803f8bac685b6",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "prepare agg pipeline",
+        "func": "const periodInSeconds = 10 * 60;\n\nconst pipeline = [    \n  {\n    $set: {\n      roundedTimestamp: {\n        $add: [\n          { $subtract: [\"$timestamp\", {\n            $mod : [\"$timestamp\", periodInSeconds*1000]\n          }]},\n          periodInSeconds*1000\n        ],\n      }\n    }\n  },\n  {\n    $match: { \n      roundedTimestamp: { $lt: msg.payload.timestamp }\n    },\n  },\n  {\n    $group:\n      {\n        _id: { time: \"$roundedTimestamp\", sensor:'$sensorCode'},\n        temperature: {$avg: \"$temperature\" },\n        count: { $sum: 1 }\n      }\n  },\n  {\n    $set: {\n      timestamp: \"$_id.time\",\n      sensorCode: \"$_id.sensor\"\n    }\n  },\n  {\n    $unset: \"_id\",\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "d554f67470a84459"
+            ]
+        ]
+    },
+    {
+        "id": "d6582c9bb6de6257",
+        "type": "cronplus",
+        "z": "54ace4d9f27746f2",
+        "name": "Run!",
+        "outputField": "payload.timestamp",
+        "timeZone": "",
+        "storeName": "",
+        "commandResponseMsgOutput": "output1",
+        "defaultLocation": "",
+        "defaultLocationType": "default",
+        "outputs": 1,
+        "options": [
+            {
+                "name": "schedule1",
+                "topic": "topic1",
+                "payloadType": "date",
+                "payload": "",
+                "expressionType": "cron",
+                "expression": "0 2,17,32,47 * * * *",
+                "location": "",
+                "offset": "0",
+                "solarType": "all",
+                "solarEvents": "sunrise,sunset"
+            }
+        ],
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "d43803f8bac685b6"
+            ]
+        ]
+    },
+    {
+        "id": "994ff61cd5b63d26",
+        "type": "switch",
+        "z": "54ace4d9f27746f2",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "e27eba8c7fb62be4"
+            ],
+            [
+                "6f9194b042fe84b0"
+            ]
+        ]
+    },
+    {
+        "id": "6f9194b042fe84b0",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug empty",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 190,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "8d81bcd7d7861da8",
+        "type": "comment",
+        "z": "54ace4d9f27746f2",
+        "name": "Run every 15 minutes, one message per sensor",
+        "info": "",
+        "x": 260,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "328bbb346028a037",
+        "type": "comment",
+        "z": "54ace4d9f27746f2",
+        "name": "do not send empty data",
+        "info": "",
+        "x": 220,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "e27eba8c7fb62be4",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "set gateway and sensorCode",
+        "func": "let result = {};\nmsg.payload.forEach(d => {\n    const item = {\n        timestamp: d.timestamp,\n        temperature: d.temperature    \n    };\n    if(result.hasOwnProperty(d.sensorCode)){\n        result[d.sensorCode].push(item);\n    } else {\n        result[d.sensorCode] = [item];\n    }\n});   \n\nfor (const [key, value] of Object.entries(result)) {\n    let clonedMsg = RED.util.cloneMessage(msg);\n    clonedMsg.payload = { \n        gatewayId: \"662579601d6f251dd42f91d5\",\n        password: \"12345\",\n        code: key,\n        data: value\n    };\n    node.send(clonedMsg);\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 240,
+        "wires": [
+            [
+                "af4065f0941f984b",
+                "b017fb4718d79382"
+            ]
+        ]
+    },
+    {
+        "id": "af4065f0941f984b",
+        "type": "http request",
+        "z": "54ace4d9f27746f2",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:8080/uu-onlyhot-maing01/22222222222222222222222222222222/sensor/importData",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 690,
+        "y": 240,
+        "wires": [
+            [
+                "c27c7824a4a07538",
+                "b017fb4718d79382"
+            ]
+        ]
+    },
+    {
+        "id": "e79c99389ebc62e5",
+        "type": "mongodb4",
+        "z": "54ace4d9f27746f2",
+        "clientNode": "5376fae6dc0a9cbe",
+        "mode": "collection",
+        "collection": "data",
+        "operation": "deleteMany",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "",
+        "x": 1050,
+        "y": 380,
+        "wires": [
+            [
+                "e62f89401ab2af8d"
+            ]
+        ]
+    },
+    {
+        "id": "c27c7824a4a07538",
+        "type": "switch",
+        "z": "54ace4d9f27746f2",
+        "name": "http status",
+        "property": "statusCode",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "199",
+                "vt": "num",
+                "v2": "300",
+                "v2t": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "0d4d35059fb1251b"
+            ],
+            [
+                "92f559f7b1fbcf47"
+            ]
+        ]
+    },
+    {
+        "id": "92f559f7b1fbcf47",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug data error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "0d4d35059fb1251b",
+        "type": "function",
+        "z": "54ace4d9f27746f2",
+        "name": "prepare delete transported data",
+        "func": "msg.payload = { $and: [\n  { \"sensorCode\": { $eq: msg.payload.code } },\n  {\"timestamp\": { $lte: msg.payload.lastTimestamp }}\n]};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 380,
+        "wires": [
+            [
+                "e79c99389ebc62e5"
+            ]
+        ]
+    },
+    {
+        "id": "b017fb4718d79382",
+        "type": "debug",
+        "z": "54ace4d9f27746f2",
+        "name": "debug http data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "5376fae6dc0a9cbe",
+        "type": "mongodb4-client",
+        "name": "red",
+        "protocol": "mongodb",
+        "hostname": "127.0.0.1",
+        "port": "27017",
+        "dbName": "red",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-simple"
+    }
+]
