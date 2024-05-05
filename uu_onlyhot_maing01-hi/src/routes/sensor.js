@@ -9,7 +9,7 @@ import RouteBar from "../core/route-bar.js";
 import importLsi from "../lsi/import-lsi.js";
 
 import SensorContext from "../bricks/sensor/sensor-context.js";
-
+//chart libraries
 import 'chart.js/auto';
 import { Chart } from 'react-chartjs-2';
 
