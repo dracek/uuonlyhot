@@ -1,9 +1,9 @@
 {
   "uuAppBoxDescriptor": {
     "schemaVersion": "2.0",
-    "code": "uu-onlyhot-maing01",
+    "code": "uun-biot24spt01-maing01",
     "version": "${projectVersion}",
-    "name": "uuOnlyhotMaing01",
+    "name": "uunBiot24spt01",
     "description": "",
     "productUri": null,
     "uuAppPackMap": {
@@ -13,7 +13,7 @@
     },
     "deliverySpecType": "uusubappspec:2.0",
     "deliverySpec": {
-      "urlPath": "uu-onlyhot-maing01",
+      "urlPath": "uun-biot24spt01-maing01",
       "uuNodeSetMap": {
         "nodeSet01": {
           "uuNodeSetType": "cmdSync",
@@ -52,9 +52,9 @@
   "uuSubAppDeploymentConfig": {
     "uuAppResourcePoolOid": "654e14b66f8dfe0016938148",
     "targetSlot": "production",
-    "asid": "11111111111111111111111111111111",
+    "asid": "8fa94b5b6c70e874ebf2ff0eb9f74efd",
     "awidList": [
-      "3039-912-8064-0000"
+      "5194f70e310160196ae06cd5a62197f1"
     ]
   },
   "uuAppServerEnvironment": {
@@ -62,9 +62,11 @@
     "uu_app_secretstore_master_key_active_slot": "slot1",
     "uu_app_secretstore_master_key1_slot1": "u}x{pX+@~v65*lxlTa^C4[b_6u@b.(p5spju^Hp%g:9dr}Z>Q{vU49#m5)QAMI9M",
     "asid_license_owner_list": [
-      "7411-6694-3444-0000"
+      "7411-6694-3444-0000", "9432-3256-9015-0000"
     ],
     "uu_app_oidc_providers_oidcg02_uri": "https://uuapp-dev.plus4u.net/uu-oidc-maing02/eca71064ecce44b0a25ce940eb8f053d/oidc",
+    "uu_app_oidc_providers_oidcg02_enabled": true,
+    "uu_app_oidc_primary_provider": "oidcg02",
     "uu5g05_libraryRegistryBaseUri": "https://uuapp-dev.plus4u.net/uu-applibraryregistry-maing01/000008ad5570455e83857a394f9a21c9",
     "uu5g05_plus4UGoBaseUri": "https://uuapp-dev.plus4u.net/uu-plus4ugo-maing01/00000c3f57074bfcb759aba2d562e013",
     "uu_plus4u5g02_identityManagementBaseUri": "https://uuapp-dev.plus4u.net/uu-identitymanagement-maing01/58ceb15c275c4b31bfe0fc9768aa6a9c",

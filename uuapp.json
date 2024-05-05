@@ -1,20 +1,21 @@
 {
-  "product": "uu_onlyhot_maing01",
+  "product": "uun-biot24spt01-maing01",
   "version": "0.1.0",
   "license": "License Commercial",
   "description": {
     "en": "",
     "cs": ""
   },
-  "devkit": {
-    "development": {
-      "appBoxLocationUri": "VALUE REQUIRED",
-      "appDeploymentUri": null,
-      "uuCloudUniverseBaseUri": "https://uuapp.plus4u.net/uu-cloud-universeg01/499b255d2620f209353489fad4ccceb4",
-      "uuCloudLogStoreBaseUri": "https://uuapp.plus4u.net/uu-cloudlogstore-maing02/4b5432d7b22636f4344e08228f4820e8",
-      "uuAppBoxRegistryBaseUri": "https://uuapp.plus4u.net/uu-cloud-appboxregistryg01/cf9e1c51b79a983a844cb4558342cf90"
-    }
-  },
   "uu_onlyhot_maing01-hi": {},
-  "uu_onlyhot_maing01-server": {}
+  "uu_onlyhot_maing01-server": {
+    "devkit": {
+      "development": {
+        "uuCloudUniverseBaseUri": "https://uuapp.plus4u.net/uu-cloud-universeg01/499b255d2620f209353489fad4ccceb4",
+        "uuCloudLogStoreBaseUri": "https://uuapp.plus4u.net/uu-cloudlogstore-maing02/4b5432d7b22636f4344e08228f4820e8",
+        "uuAppBoxRegistryBaseUri": "https://uuapp.plus4u.net/uu-cloud-appboxregistryg01/cf9e1c51b79a983a844cb4558342cf90",
+        "uuAppBoxUri": "https://uuapp.plus4u.net/uu-cloud-appboxregistryg01/cf9e1c51b79a983a844cb4558342cf90/uuAppBox/get?id=66373f2dca7aa000423d9b67&extended=true",
+        "uuSubAppInstanceWorkloadOid": "66373faa6f6e96001630971a"
+      }
+    }
+  }
 }
