@@ -8,7 +8,7 @@
   },
   "devkit": {
     "development": {
-      "appBoxLocationUri": "----- VALUE REQUIRED -----",
+      "appBoxLocationUri": "VALUE REQUIRED",
       "appDeploymentUri": null,
       "uuCloudUniverseBaseUri": "https://uuapp.plus4u.net/uu-cloud-universeg01/499b255d2620f209353489fad4ccceb4",
       "uuCloudLogStoreBaseUri": "https://uuapp.plus4u.net/uu-cloudlogstore-maing02/4b5432d7b22636f4344e08228f4820e8",
