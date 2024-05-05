@@ -1,4 +1,6 @@
 //@@viewOn:imports
+import "chart.js/auto";
+import { Chart } from "react-chartjs-2";
 import { Utils, createVisualComponent, useSession, useContext, useEffect, Lsi } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Plus4U5Elements from "uu_plus4u5g02-elements";
@@ -6,16 +8,13 @@ import { withRoute } from "uu_plus4u5g02-app";
 
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
+import SensorContext from "../bricks/sensor/sensor-context.js";
 import importLsi from "../lsi/import-lsi.js";
 
-import SensorContext from "../bricks/sensor/sensor-context.js";
-//chart libraries
-import 'chart.js/auto';
-import { Chart } from 'react-chartjs-2';
-
+//chart librariees
 
 //@@viewOff:imports
-
+//@@
 //@@viewOn:constants
 //@@viewOff:constants
 
@@ -33,11 +32,11 @@ const Css = {
       color: "black",
       "& > *": {
         display: "block",
-        width: "100%"
+        width: "100%",
       },
       "& h1": {
-        marginBottom: "45px"  
-      }
+        marginBottom: "45px",
+      },
     }),
 };
 //@@viewOff:css
@@ -54,10 +53,9 @@ let Sensor = createVisualComponent({
   propTypes: {},
   //@@viewOff:propTypes
 
-    //@@viewOn:defaultProps
+  //@@viewOn:defaultProps
   defaultProps: {},
   //@@viewOff:defaultProps
-
 
   render(props) {
     //@@viewOn:private
@@ -65,13 +63,11 @@ let Sensor = createVisualComponent({
     const sensorContext = useContext(SensorContext);
 
     useEffect(() => {
-      sensorContext.callsMap.sensorGetData(
-        { 
-          "sensorId": props.params.id,
-          "from": 1714255200000,
-          "to": 1714341600000
-        }
-      );
+      sensorContext.callsMap.sensorGetData({
+        sensorId: props.params.id,
+        from: 1714255200000,
+        to: 1714341600000,
+      });
     }, []);
 
     //@@viewOff:private
@@ -83,41 +79,39 @@ let Sensor = createVisualComponent({
 
     const attrs = Utils.VisualComponent.getAttrs(props);
 
-
-    let chartdata = sensorContext.sensorData && sensorContext.sensorData.itemList || [];
+    let chartdata = (sensorContext.sensorData && sensorContext.sensorData.itemList) || [];
 
     const options = {
       responsive: true,
       plugins: {
         legend: {
-          position: 'top',
-          display: false
+          position: "top",
+          display: false,
         },
         title: {
           display: true,
-          text: 'Teploty - denní graf',
+          text: "Teploty - denní graf",
         },
       },
     };
 
-    const formatter = new Intl.DateTimeFormat('cs-CZ', { hour: '2-digit', minute: '2-digit'});
+    const formatter = new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" });
 
-    const labels = chartdata.map(row => {
+    const labels = chartdata.map((row) => {
       const d = new Date(row.timestamp);
       return formatter.format(d);
-    });    
-    
+    });
+
     const data = {
       labels,
       datasets: [
         {
           //label: 'Dataset 1',
-          data: chartdata.map(row => row.temperature.toFixed(1)),
-          backgroundColor: 'rgba(127,127,255, 0.5)',
-        }
+          data: chartdata.map((row) => row.temperature.toFixed(1)),
+          backgroundColor: "rgba(127,127,255, 0.5)",
+        },
       ],
     };
-
 
     return (
       <div {...attrs}>
@@ -125,7 +119,7 @@ let Sensor = createVisualComponent({
         <div className={Css.box()}>
           <h1>Sensor {props.params.id}</h1>
           <div>todo nějaké detaily, edit, grafy...</div>
-          <Chart type='bar' options={options} data={data} />
+          <Chart type="bar" options={options} data={data} />
         </div>
       </div>
     );
