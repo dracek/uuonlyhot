@@ -1,57 +1,118 @@
-//@@viewOn:imports
-import { createVisualComponent, Lsi, useRoute } from "uu5g05";
-import Plus4U5App from "uu_plus4u5g02-app";
+import React from 'react';
+import { useRoute } from "uu5g05";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
+import { purple, black } from '@mui/material/colors';
 
-import Config from "./config/config.js";
-import importLsi from "../lsi/import-lsi.js";
-//@@viewOff:imports
 
-//@@viewOn:constants
-//@@viewOff:constants
+const pages = ['Home', 'About', 'Sensor',];
 
-//@@viewOn:css
-//@@viewOff:css
+const ResponsiveAppBar = () => {
+  const [, setRoute] = useRoute();
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
 
-//@@viewOn:helpers
-//@@viewOff:helpers
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
 
-const RouteBar = createVisualComponent({
-  //@@viewOn:statics
-  uu5Tag: Config.TAG + "RouteBar",
-  //@@viewOff:statics
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
-  //@@viewOn:propTypes
-  propTypes: {},
-  //@@viewOff:propTypes
+  const navigateTo = (page) => {
+    const route = page.toLowerCase(); 
+    setRoute(route);
+    handleCloseNavMenu();
+  };
 
-  //@@viewOn:defaultProps
-  defaultProps: {},
-  //@@viewOff:defaultProps
+  return (
+    <AppBar position="static" sx={{ backgroundColor: 'transparent',  width: '80%',boxShadow: 'none', 
+    border: 0}}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <DeviceThermostatIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#2E0F15'}} />
+          <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="./routes/home"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'transparent', 
+                textDecoration: 'none',
+                backgroundImage: 'linear-gradient(150deg, #2E0F15, #F3ECFB)', 
+                WebkitBackgroundClip: 'text', 
+                backgroundClip: 'text', 
+              }}
+            >
+              ONLY HOT ||
+            </Typography>
 
-  render(props) {
-    //@@viewOn:private
-    const [, setRoute] = useRoute();
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color= "#2E0F15"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' }
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={() => navigateTo(page)}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
 
-    const appActionList = [
-      { children: <Lsi import={importLsi} path={["Menu", "home"]} />, onClick: () => setRoute("home") },
-      {
-        children: <Lsi import={importLsi} path={["Menu", "about"]} />,
-        onClick: () => setRoute("about"),
-        collapsed: true,
-      },
-    ];
-    //@@viewOff:private
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={() => navigateTo(page)}
+                sx={{ my: 2, color: '#3B2E4D', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
+};
 
-    //@@viewOn:interface
-    //@@viewOff:interface
-
-    //@@viewOn:render
-    return <Plus4U5App.RouteBar appActionList={appActionList} {...props} />;
-    //@@viewOff:render
-  },
-});
-
-//@@viewOn:exports
-export { RouteBar };
-export default RouteBar;
-//@@viewOff:exports
+export default ResponsiveAppBar;
