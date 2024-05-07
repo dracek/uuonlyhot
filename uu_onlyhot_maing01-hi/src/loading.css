@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: center;
   pointer-events: none;
-  color: #2196f3;
+  color: #747df0;
   line-height: 1.15;
 }
 .uu-app-loading[data-visual-ready] {
@@ -17,6 +17,7 @@
 .uu-app-loading>* {
   pointer-events: all;
 }
+
 
 .uu-app-loading-svg-container {
   position: relative;
@@ -34,7 +35,7 @@
 }
 
 .uu-app-loading-name {
-  color: #212121;
+  color: #30263E;
   font-size: 24px;
   font-weight: 500;
   line-height: 28px;
@@ -44,6 +45,22 @@
   content: "";
   display: block;
   margin-top: 16px;
+}
+
+.plusuapp-1j23nac, plusuapp-35cmd3, uu-1ak6bum {
+  background-color: transparent !important;
+align-items: flex-end !important;
+display: flex !important;
+justify-content: flex-end !important;
+width: 15% !important;
+right: 0 !important;;
+top: 0 !important;; 
+position: absolute !important; 
+}
+
+.plusuapp-1v9oth4 {
+  background-color: #30263E !important;
+  
 }
 
 @media screen and (min-width: 481px) {
@@ -57,6 +74,21 @@
   .uu-app-loading-name:before {
     margin-top: 24px;
   }
+  .plusuapp-1j23nac, plusuapp-35cmd3, uu-1ak6bum {
+    background-color: transparent !important;
+  align-items: flex-end !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 15% !important;
+  right: 0 !important;;
+  top: 0 !important;; 
+  position: absolute !important; 
+}
+  
+  .plusuapp-1v9oth4 {
+    background-color: #30263E !important;
+    
+  }
 }
 
 @keyframes uu-app-loading {
@@ -65,5 +97,23 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 100px) {
+  .plusuapp-1j23nac, plusuapp-35cmd3, uu-1ak6bum {
+    background-color: transparent !important;
+  align-items: flex-end !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 15% !important;
+  right: 0 !important;;
+  top: 0 !important;; 
+  position: absolute !important; 
+}
+  
+  .plusuapp-1v9oth4 {
+    background-color: #0E033C !important;
+    
   }
 }

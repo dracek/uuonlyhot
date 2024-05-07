@@ -120,13 +120,15 @@ let Sensor = createVisualComponent({
 
 
     return (
-      <div {...attrs}>
+      <div {...attrs} style={{ background: "linear-gradient(150deg, #FAF6FF, #FAF0F2, #FAF6FF)", minHeight: "100vh" }}>
+       <BackgroundProvider background="dark">
         <RouteBar />
         <div className={Css.box()}>
           <h1>Sensor {props.params.id}</h1>
           <div>todo nějaké detaily, edit, grafy...</div>
           <Chart type='bar' options={options} data={data} />
         </div>
+        </BackgroundProvider> 
       </div>
     );
     //@@viewOff:render

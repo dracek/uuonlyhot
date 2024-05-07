@@ -7,6 +7,10 @@
   "namespace": "UuOnlyhot",
   "spec": "uu5-app; uu_appg01_devkit@5.15.4",
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.16",
+    "@mui/material": "^5.15.16",
     "chart.js": "^4.4.2",
     "react-chartjs-2": "^5.2.0",
     "uu_plus4u5g02": "^1.22.2",
