@@ -19,11 +19,8 @@ const ControlPanel = Utils.Component.lazy(() => import("../routes/control-panel.
 const ROUTE_MAP = {
   "": { redirect: "home" },
   home: (props) => <GatewayDataProvider><SensorDataProvider><Home {...props} /></SensorDataProvider></GatewayDataProvider>,
-  sensor: (props) => {
-    const id = props.match.params.id; // This depends on how your SPA setup passes route params
-    return <SensorDataProvider><Sensor {...props} id={id} /></SensorDataProvider>;
-  },
-    about: (props) => <About {...props} />,
+  sensor: (props) => <SensorDataProvider><Sensor {...props} /></SensorDataProvider>,
+  about: (props) => <About {...props} />,
   "sys/uuAppWorkspace/initUve": (props) => <InitAppWorkspace {...props} />,
   controlPanel: (props) => <ControlPanel {...props} />,
   "*": () => (

@@ -6,6 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Link } from 'uu5g05-elements';
 
 const SensorCard = ({ sensor }) => {
   const temperature = sensor.temperature ? `${sensor.temperature.toFixed(1)}°C` : 'N/A';
@@ -30,9 +31,11 @@ const SensorCard = ({ sensor }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color="secondary"  href={`sensor?id=${sensor.id}`}>
-          View Details
-        </Button>
+        <Link href={`sensor?id=${sensor.id}`}>
+          <Button size="small" color="secondary">
+              View Details
+            </Button>
+        </Link>
       </CardActions>
     </Card>
   );

@@ -62,7 +62,7 @@ class SensorAbl {
     console.log(dtoIn);
 
     let filter = { $and: [
-        //{ "sensorId": { $eq: dtoIn.sensorId }}, todo fix objectId!!!!
+        { "sensorId": { $eq: dtoIn.sensorId }},
         { "timestamp": { $gte: Number(dtoIn.from) }},  // fix number to string  FE calls auto conversion!
         { "timestamp": { $lt: Number(dtoIn.to) }}
       ]};
@@ -89,7 +89,7 @@ class SensorAbl {
 
   async importData(awid, session, dtoIn) {
 
-    // todo: gateway a autorizace bude řešená přes middleware, v tuto chvíli očekáváme v ABL validní gateway (není potřeba ji ověřovat)
+    // todo: gateway a autorizace bude řešená přes middleware
 
     let validationResult = this.validator.validate("sensorImportDataDtoInType", dtoIn);
     
@@ -100,6 +100,11 @@ class SensorAbl {
         WARNINGS.ImportData.UnsupportedKeys.code,
         Errors.ImportData.InvalidDtoIn
         );
+
+    let gw = await this.gatewayDao.get(awid, dtoIn.gatewayId);
+    if (!gw || gw.password !== dtoIn.password){
+      throw new Error("Invalid login/password.");
+    }
 
     let dtoOut = {
       code: dtoIn.code,

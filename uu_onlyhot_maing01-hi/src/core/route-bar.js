@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoute } from "uu5g05";
+import { Link } from 'uu5g05-elements';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -40,26 +41,26 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <DeviceThermostatIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#2E0F15'}} />
-          <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="./routes/home"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'transparent', 
-                textDecoration: 'none',
-                backgroundImage: 'linear-gradient(150deg, #2E0F15, #F3ECFB)', 
-                WebkitBackgroundClip: 'text', 
-                backgroundClip: 'text', 
-              }}
-            >
-              ONLY HOT ||
-            </Typography>
+          <Link href="home">
+            <Typography
+                variant="h6"
+                noWrap                
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: 'transparent', 
+                  textDecoration: 'none',
+                  backgroundImage: 'linear-gradient(150deg, #2E0F15, #F3ECFB)', 
+                  WebkitBackgroundClip: 'text', 
+                  backgroundClip: 'text', 
+                }}
+              >
+                ONLY HOT ||
+              </Typography>
+            </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton

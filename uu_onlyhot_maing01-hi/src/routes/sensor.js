@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, useSession, useContext, useEffect, Lsi } from "uu5g05";
+import { Utils, createVisualComponent, BackgroundProvider, useSession, useContext, useEffect, Lsi } from "uu5g05";
 import Uu5Elements from "uu5g05-elements";
 import Plus4U5Elements from "uu_plus4u5g02-elements";
 import { withRoute } from "uu_plus4u5g02-app";
@@ -65,11 +65,17 @@ let Sensor = createVisualComponent({
     const sensorContext = useContext(SensorContext);
 
     useEffect(() => {
+      sensorContext.callsMap.sensorGet({"id": props.params.id}); // todo params
+
+      const start = new Date(); // todo some neat calendar
+      const end = new Date();
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
       sensorContext.callsMap.sensorGetData(
         { 
           "sensorId": props.params.id,
-          "from": 1714255200000,
-          "to": 1714341600000
+          "from": start.getTime(),
+          "to": end.getTime()
         }
       );
     }, []);
@@ -118,13 +124,17 @@ let Sensor = createVisualComponent({
       ],
     };
 
+    let sensorName = props.params && props.params.id || "N/A";
+    if(sensorContext.data){
+      sensorName = sensorContext.data.name ? sensorContext.data.name : sensorContext.data.code;
+    }
 
     return (
       <div {...attrs} style={{ background: "linear-gradient(150deg, #FAF6FF, #FAF0F2, #FAF6FF)", minHeight: "100vh" }}>
        <BackgroundProvider background="dark">
         <RouteBar />
         <div className={Css.box()}>
-          <h1>Sensor {props.params.id}</h1>
+          <h1>Sensor {sensorName}</h1>
           <div>todo nějaké detaily, edit, grafy...</div>
           <Chart type='bar' options={options} data={data} />
         </div>
