@@ -64,6 +64,10 @@ class DataMongo extends UuObjectDao {
     return await super.deleteOne(filter);
   }
 
+  async removeMany(awid, filter) {
+    return await super.deleteMany({ awid: awid, ...filter });
+  }
+
 
 }
 

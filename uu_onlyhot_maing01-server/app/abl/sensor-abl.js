@@ -59,7 +59,7 @@ class SensorAbl {
 
     // todo sensor exist!
 
-    console.log(dtoIn);
+    //console.log(dtoIn);
 
     let filter = { $and: [
         { "sensorId": { $eq: dtoIn.sensorId }},
@@ -105,17 +105,18 @@ class SensorAbl {
     if (!gw || gw.password !== dtoIn.password){
       throw new Error("Invalid login/password.");
     }
-
-    let dtoOut = {
-      code: dtoIn.code,
-      lastTimestamp: dtoIn.data.length > 0 ? Math.max(...dtoIn.data.map(d => d.timestamp)) : null
-    };
      
     let sensor = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
     if (sensor === null){
       //todo try catch
       sensor = await this.dao.create({awid, gatewayId: dtoIn.gatewayId, code: dtoIn.code});
     }
+
+    let dtoOut = {
+      code: dtoIn.code,
+      lastTimestamp: null,
+      uuAppErrorMap: uuAppErrorMap
+    };
 
     dtoIn.data.forEach(element => {
       const item = {
@@ -124,11 +125,19 @@ class SensorAbl {
         timestamp : element.timestamp,
         temperature: element.temperature
       };
-      //todo try catch
+      //todo try catch + error
       this.dataDao.upsert(item); 
     });
 
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
+
+    if (dtoIn.data.length > 0){
+      const latestData = dtoIn.data.reduce((prev, current) => (prev.y > current.y) ? prev : current);
+
+      await this.dao.update(awid, {id: sensor.id, lastTemperature: latestData.temperature });
+
+      dtoOut.lastTimestamp = latestData.timestamp;
+    }
+
     return dtoOut;
   }
 
@@ -247,7 +256,7 @@ class SensorAbl {
       throw new Errors.Delete.SensorNotPresent({ uuAppErrorMap });  
     }
 
-    // todo delete also graph data
+    await this.dataDao.removeMany(awid, { sensorId: entity.id.toString() });
 
     await this.dao.remove(awid, dtoIn.id);
 

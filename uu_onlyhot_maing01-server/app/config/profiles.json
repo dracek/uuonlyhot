@@ -79,7 +79,7 @@
       },
       "sensor/getData": {
         "sysStateList": ["active"],
-        "profileList": ["Public"]
+        "profileList": ["Authenticated"]
       }
     }
   }

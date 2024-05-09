@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'uu5g05-elements';
 
 const SensorCard = ({ sensor }) => {
-  const temperature = sensor.temperature ? `${sensor.temperature.toFixed(1)}°C` : 'N/A';
+  const temperature = sensor.lastTemperature ? `${sensor.lastTemperature.toFixed(1)}°C` : 'N/A';
 
   return (
     <Card sx={{
