@@ -2,7 +2,6 @@ import React from "react";
 import { createVisualComponent } from "uu5g05";
 import Uu5Forms from "uu5g05-forms";
 import Uu5Elements from "uu5g05-elements";
-import { Box } from "@mui/material";
 import Config from '../config/config.js';
 
 const Css = {
@@ -18,9 +17,11 @@ const FormComponent = createVisualComponent({
   uu5Tag: "FormComponent",
 
   render(props) {
+
+    const sumbitData = (event) => props.onSubmit(event.data.value);
    
     return (
-      <Uu5Forms.Form.Provider onSubmit={props.onSubmit} onCancel={props.onCancel}>
+      <Uu5Forms.Form.Provider onSubmit={sumbitData} onCancel={props.onCancel} initialValue={props.initialValue}>
           <Uu5Forms.Form.View>
 
             {props.children}

@@ -18,7 +18,7 @@ const STATUS_ERROR = "ERROR";
 
 const GatewayDataProvider = createComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "SensorDataProvider",
+  uu5Tag: Config.TAG + "GatewayDataProvider",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -59,6 +59,8 @@ const GatewayDataProvider = createComponent({
           let res = await Calls.gatewayCreate(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
+          infoMsg({message:`Gateway ${dtoIn.name} created`});
+
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot create gateway.'})
@@ -85,6 +87,7 @@ const GatewayDataProvider = createComponent({
           let res = await Calls.gatewayUpdate(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
+          infoMsg({message:`Gateway ${dtoIn.name} edited.`});
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot update gateway.'})
@@ -98,6 +101,7 @@ const GatewayDataProvider = createComponent({
           let res = await Calls.gatewayDelete(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
+          infoMsg({message:`Gateway deleted.`});
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot delete gateway.'})

@@ -2,8 +2,7 @@
 
 const sensorCreateDtoInType = shape({
     gatewayId: string().isRequired(),
-    code: string().isRequired(),
-    name: string().isRequired(),
+    code: string().isRequired()
 });
 
 const sensorGetDtoInType = shape({

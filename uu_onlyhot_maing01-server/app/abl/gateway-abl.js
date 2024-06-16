@@ -174,6 +174,8 @@ class GatewayAbl {
 
     const validationResult = this.validator.validate("gatewayListDtoInType", dtoIn);
 
+    await new Promise(resolve => setTimeout(resolve, 500)); // just for delay testing
+
     let uuAppErrorMap = {};
     uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
