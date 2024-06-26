@@ -2,15 +2,9 @@
 import { Utils, createVisualComponent, BackgroundProvider, useSession, useContext, useEffect, useState } from "uu5g05";
 import { withRoute } from "uu_plus4u5g02-app";
 import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
-import { Link } from 'uu5g05-elements';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-
+import SensorCard from "../bricks/sensor/sensor-card.js";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 import SensorContext from "../bricks/sensor/sensor-context.js";
@@ -128,50 +122,7 @@ let Sensor = createVisualComponent({
               <SensorSearch />
               <h2 className={Css.header()}>All Sensors</h2>
               {paginatedSensors.map((sensor) => (
-                <Card
-                  key={sensor.id}
-                  sx={{
-                    minWidth: 275,
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    borderRadius: 5,
-                    boxShadow: 3,
-                    margin: "10px 0",
-                    color: "white",
-                  }}
-                >
-                  <CardContent>
-                    <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                      Sensor Details
-                    </Typography>
-                    <Typography variant="h5" component="div" color="white">
-                      {sensor.name || sensor.code}
-                    </Typography>
-                    <Typography
-                      sx={{ mb: 1.5, fontSize: "20px", textAlign: "center" }}
-                      color="#00FFE5"
-                    >
-                      {sensor.lastTemperature
-                        ? `${sensor.lastTemperature.toFixed(1)}°C`
-                        : "N/A"}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Link href={`sensor?id=${sensor.id}`}>
-                      <Button
-                        sx={{
-                          alignItems: "center",
-                          margin: "auto",
-                          color: "#E50099",
-                          mx: 1,
-                          "&:hover": { color: "#00FFE5" },
-                          "&:active": { transform: "scale(1.2)" },
-                        }}
-                      >
-                        <InfoRoundedIcon />nfo
-                      </Button>
-                    </Link>
-                  </CardActions>
-                </Card>
+                <SensorCard key={sensor.id} sensor={sensor} />
               ))}
               <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Pagination
