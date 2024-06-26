@@ -132,6 +132,12 @@ const SensorDataProvider = createComponent({
       }
     }
 
+    const findSensorByNameOrId = (input) => {
+      const inputLowerCase = input.toLowerCase();
+      return listData.itemList.find(sensor => 
+        sensor.name.toLowerCase() === inputLowerCase || sensor.id === input
+      );
+    };
 
     //@@viewOff:private
 
@@ -151,7 +157,8 @@ const SensorDataProvider = createComponent({
         sensorUpdate,
         sensorDelete,
         sensorGetData
-      }
+      },
+      findSensorByNameOrId 
     };
 
     return (<SensorContext.Provider value={ newValue }>
