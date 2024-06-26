@@ -3,6 +3,7 @@ import { Utils, createVisualComponent, BackgroundProvider, useSession, useContex
 import Uu5Elements from "uu5g05-elements";
 import Plus4U5Elements from "uu_plus4u5g02-elements";
 import { withRoute } from "uu_plus4u5g02-app";
+import Typography from '@mui/material/Typography';
 
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
@@ -21,6 +22,12 @@ import { Chart } from 'react-chartjs-2';
 
 //@@viewOn:css
 const Css = {
+  main: () =>
+  Config.Css.css({
+    background: "#23226e", 
+    minHeight: "100vh",
+    color: "white", 
+  }),
   box: () =>
     Config.Css.css({
       display: "flex",
@@ -39,6 +46,14 @@ const Css = {
         marginBottom: "45px"  
       }
     }),
+    header: () =>
+    Config.Css.css({
+      fontSize: '50px',
+      color: 'transparent',
+      backgroundImage: 'linear-gradient(30deg, #E50099, #FFA7A7)',
+      WebkitBackgroundClip: 'text',
+      backgroundClip: 'text'
+    }),  
 };
 //@@viewOff:css
 
@@ -102,9 +117,29 @@ let Sensor = createVisualComponent({
         title: {
           display: true,
           text: 'Teploty - denní graf',
+          color: 'white'
         },
       },
+      scales: {
+        x: {
+          ticks: {
+            color: 'white'
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.2)'
+          }
+        },
+        y: {
+          ticks: {
+            color: 'white'
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.2)'
+          }
+        }
+      }
     };
+
 
     const formatter = new Intl.DateTimeFormat('cs-CZ', { hour: '2-digit', minute: '2-digit'});
 
@@ -117,11 +152,10 @@ let Sensor = createVisualComponent({
       labels,
       datasets: [
         {
-          //label: 'Dataset 1',
           data: chartdata.map(row => row.temperature.toFixed(1)),
-          backgroundColor: 'rgba(127,127,255, 0.5)',
+          backgroundColor: '#E50099'
         }
-      ],
+      ]
     };
 
     let sensorName = props.params && props.params.id || "N/A";
@@ -130,12 +164,13 @@ let Sensor = createVisualComponent({
     }
 
     return (
-      <div {...attrs} style={{ background: "linear-gradient(150deg, #FAF6FF, #FAF0F2, #FAF6FF)", minHeight: "100vh" }}>
+      <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
        <BackgroundProvider background="dark">
         <RouteBar />
         <div className={Css.box()}>
-          <h1>Sensor {sensorName}</h1>
-          <div>todo nějaké detaily, edit, grafy...</div>
+        <h1 className={Css.header()}>
+         Sensor {sensorName}</h1>
+          <div style={{ color: "white", margin: "20px" }}>todo nějaké detaily, edit, grafy...</div>
           <Chart type='bar' options={options} data={data} />
         </div>
         </BackgroundProvider> 

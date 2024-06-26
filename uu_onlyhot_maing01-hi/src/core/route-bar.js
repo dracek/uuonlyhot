@@ -12,10 +12,8 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
-import { purple, black } from '@mui/material/colors';
 
-
-const pages = ['Home', 'About', 'Sensor',];
+const pages = ['Home', 'About', 'Sensor'];
 
 const ResponsiveAppBar = () => {
   const [, setRoute] = useRoute();
@@ -36,42 +34,42 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'transparent',  width: '80%',boxShadow: 'none', 
-    border: 0}}>
+    <AppBar position="static" sx={{ backgroundColor: 'transparent',  width: '80%', boxShadow: 'none', border: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <DeviceThermostatIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#2E0F15'}} />
+          <DeviceThermostatIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#BA00AD', fontSize: '30px' }} />
           <Link href="home">
             <Typography
-                variant="h6"
-                noWrap                
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'transparent', 
-                  textDecoration: 'none',
-                  backgroundImage: 'linear-gradient(150deg, #2E0F15, #F3ECFB)', 
-                  WebkitBackgroundClip: 'text', 
-                  backgroundClip: 'text', 
-                }}
-              >
-                ONLY HOT ||
-              </Typography>
-            </Link>
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 900,
+                fontSize: '30px',
+                letterSpacing: '.5rem',
+                color: 'transparent',
+                textDecoration: 'none',
+                backgroundImage: 'linear-gradient(150deg, #E50099, #F7FF00)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+              }}
+            >
+              ONLY HOT ||
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="open navigation menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color= "#2E0F15"
+              sx={{ color: '#00FFE5' }}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ color: '#E50099' }} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -88,23 +86,55 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' }
+                display: { xs: 'block', md: 'none' },
+                '& .MuiPaper-root': {
+                  backgroundColor: 'rgba(232, 5, 153, 0.9)', // Semi-transparent pink
+                  color: '#FFFFFF', // White text color
+                },
+                '& .MuiMenuItem-root': {
+                  '&:hover': {
+                    backgroundColor: 'rgba(247, 255, 0, 0.7)', // Yellow hover color
+                  },
+                },
               }}
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={() => navigateTo(page)}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center" sx={{ color: '#FFFFFF' }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
+
+          <DeviceThermostatIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, color: '#BA00AD', fontSize: '30px' }} />
+          <Link href="home">
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'transparent',
+                textDecoration: 'none',
+                backgroundImage: 'linear-gradient(150deg, #E50099, #F7FF00)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+              }}
+            >
+              ONLY HOT ||
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={() => navigateTo(page)}
-                sx={{ my: 2, color: '#3B2E4D', display: 'block' }}
+                sx={{ my: 2, color: '#E50099', display: 'block', fontSize:'17px' }}
               >
                 {page}
               </Button>

@@ -7,9 +7,9 @@ const Css = {
   main: () =>
     Config.Css.css({
       dialog: {
-          background: 'white !important',
+          background: '#23226e !important',
           'span': {
-            color: 'purple !important'
+            color: '#white !important'
           }
           
       }

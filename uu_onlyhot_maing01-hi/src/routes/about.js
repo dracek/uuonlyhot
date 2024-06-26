@@ -1,6 +1,7 @@
 //@@viewOn:imports
 import {
   Utils,
+  BackgroundProvider,
   createVisualComponent,
   Environment,
   Lsi,
@@ -19,59 +20,76 @@ import importLsi from "../lsi/import-lsi.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
+const COLORS = {
+  polarWhite: "#f0f8ff",
+  slateGray: "#708090",
+};
 //@@viewOff:constants
 
 //@@viewOn:css
 const Css = {
-  content: () => Config.Css.css`
-    margin: 0 auto;
-    max-width: 920px;
-
-    .plus4u5-app-about > .uu5-bricks-header,
-    .plus4u5-app-licence > .uu5-bricks-header,
-    .plus4u5-app-authors > .uu5-bricks-header,
-    .plus4u5-app-technologies > .uu5-bricks-header {
-      border-bottom: 0;
-    }
-
-    .plus4u5-app-authors > .uu5-bricks-header {
-      margin: 20px 0 10px 0;
-      text-align: center;
-    }
-
-    > *:last-child {
-      padding-bottom: 56px;
-    }
+  main: () =>
+    Config.Css.css({
+      background: "#23226e", 
+      minHeight: "100vh",
+      color: COLORS.polarWhite,
+    }),
+  content: () =>
+    Config.Css.css({
+      margin: "0 auto",
+      maxWidth: "920px",
+      color: COLORS.polarWhite,
+      "& h1, h2, h3, h4, h5, h6, p, a, div": {
+        color: `${COLORS.polarWhite} !important`,
+      },
+      "& .plus4u5-app-about > .uu5-bricks-header, .plus4u5-app-licence > .uu5-bricks-header, .plus4u5-app-authors > .uu5-bricks-header, .plus4u5-app-technologies > .uu5-bricks-header": {
+        borderBottom: "0",
+      },
+      "& .plus4u5-app-authors > .uu5-bricks-header": {
+        margin: "20px 0 10px 0",
+        textAlign: "center",
+      },
+      "& > *:last-child": {
+        paddingBottom: "56px",
+      },
+    }),
+  text: () => Config.Css.css`
+    color: ${COLORS.polarWhite} !important; 
+  `,
+  heading: () => Config.Css.css`
+    color: ${COLORS.polarWhite} !important; 
   `,
   technologies: () => Config.Css.css({ maxWidth: 480 }),
   logos: () => Config.Css.css({ textAlign: "center", marginTop: 56 }),
   common: () =>
-    Config.Css.css({
-      maxWidth: 480,
-      margin: "12px auto 56px",
+    Config.Css.css`
+      max-width: 480px;
+      margin: 12px auto 56px;
+      color: ${COLORS.slateGray}; // Slate gray text
 
-      "& > *": {
-        borderTop: "1px solid rgba(0, 0, 0, 0.12)",
-        padding: "9px 0 12px",
-        textAlign: "center",
-        color: "#828282",
-        "&:last-child": {
-          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-        },
-      },
-    }),
+      & > * {
+        border-top: 1px solid rgba(255, 255, 255, 0.12); 
+        padding: 9px 0 12px;
+        text-align: center;
+        color: ${COLORS.slateGray}; // Slate gray text
+        &:last-child {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12); 
+        }
+      }
+    `,
   technologiesLicenseRow: () =>
-    Config.Css.css({
-      display: "grid",
-      gridTemplateColumns: "minmax(0, 12fr)",
-      marginTop: 40,
-      padding: "0 8px",
-      gap: "0 16px",
-      borderTop: "1px solid rgba(0,0,0,.12)",
-      ...Utils.Style.getMinMediaQueries("l", {
+    Config.Css.css`
+      display: grid;
+      grid-template-columns: minmax(0, 12fr);
+      margin-top: 40px;
+      padding: 0 8px;
+      gap: 0 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12); 
+      color: ${COLORS.slateGray};
+      ${Utils.Style.getMinMediaQueries("l", {
         gridTemplateColumns: "minmax(0, 8fr) minmax(0, 4fr)",
-      }),
-    }),
+      })}
+    `,
   license: () => Config.Css.css({ width: "auto" }),
 };
 //@@viewOff:css
@@ -126,70 +144,79 @@ let About = createVisualComponent({
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
     return legacyComponentsReady ? (
-      <div {...attrs}>
-        <RouteBar />
-        <div className={Css.content()}>
-          <DynamicLibraryComponent
-            uu5Tag="Plus4U5.App.About"
-            header={<Lsi import={importLsi} path={["About", "header"]} />}
-            content={about}
-          />
-          {sessionState === "authenticated" ? (
+      <div {...attrs} className={Css.main()}>
+        <BackgroundProvider background="dark">
+          <RouteBar />
+          <div className={Css.content()}>
             <DynamicLibraryComponent
-              uu5Tag="Plus4U5.App.Support"
-              uuFlsUri={uuAppUuFlsBaseUri}
-              uuSlsUri={uuAppUuSlsBaseUri}
-              productCode="support/uuOnlyhot"
-              productPortalUri={uuAppProductPortalUri}
+              uu5Tag="Plus4U5.App.About"
+              header={<Lsi import={importLsi} path={["About", "header"]} />}
+              content={about}
+              className={Css.text()} // Apply text color to the dynamic component
             />
-          ) : null}
-          {products.length > 0 ? (
-            <DynamicLibraryComponent uu5Tag="UuProductCatalogue.Bricks.ProductList" type="16x9" products={products} />
-          ) : null}
-          <div className={Css.common()}>
-            <div>{`uuOnlyhot ${Environment.appVersion}`}</div>
-            {license.termsOfUse && (
+            {sessionState === "authenticated" ? (
+              <DynamicLibraryComponent
+                uu5Tag="Plus4U5.App.Support"
+                uuFlsUri={uuAppUuFlsBaseUri}
+                uuSlsUri={uuAppUuSlsBaseUri}
+                productCode="support/uuOnlyhot"
+                productPortalUri={uuAppProductPortalUri}
+                className={Css.text()} // Apply text color to the dynamic component
+              />
+            ) : null}
+            {products.length > 0 ? (
+              <DynamicLibraryComponent
+                uu5Tag="UuProductCatalogue.Bricks.ProductList"
+                type="16x9"
+                products={products}
+                className={Css.text()} // Apply text color to the dynamic component
+              />
+            ) : null}
+            <div className={Css.common()}>
+              <div className={Css.text()}>{`uuOnlyhot ${Environment.appVersion}`}</div>
+              {license.termsOfUse && (
+                <div>
+                  <Uu5Elements.Link href={license.termsOfUse} target="_blank" className={Css.text()}>
+                    <Lsi import={importLsi} path={["About", "termsOfUse"]} />
+                  </Uu5Elements.Link>
+                </div>
+              )}
+            </div>
+            <DynamicLibraryComponent
+              uu5Tag="Plus4U5.App.Authors"
+              header={<Lsi import={importLsi} path={["About", "creatorsHeader"]} />}
+              leadingAuthors={leadingAuthors}
+              otherAuthors={otherAuthors}
+              className={Css.text()} // Apply text color to the dynamic component
+            />
+            <div className={Css.technologiesLicenseRow()}>
               <div>
-                <Uu5Elements.Link href={license.termsOfUse} target="_blank">
-                  <Lsi import={importLsi} path={["About", "termsOfUse"]} />
-                </Uu5Elements.Link>
+                <DynamicLibraryComponent
+                  uu5Tag="Plus4U5.App.Technologies"
+                  technologies={usedTechnologies.technologies}
+                  content={usedTechnologies.content}
+                  textAlign="left"
+                  className={Css.text()} // Apply text color to the dynamic component
+                />
               </div>
-            )}
-          </div>
-          <DynamicLibraryComponent
-            uu5Tag="Plus4U5.App.Authors"
-            header={<Lsi import={importLsi} path={["About", "creatorsHeader"]} />}
-            leadingAuthors={leadingAuthors}
-            otherAuthors={otherAuthors}
-          />
-          <div className={Css.technologiesLicenseRow()}>
-            <div>
-              <DynamicLibraryComponent
-                uu5Tag="Plus4U5.App.Technologies"
-                technologies={usedTechnologies.technologies}
-                content={usedTechnologies.content}
-                textAlign="left"
-                className={Css.technologies()}
-              />
+              <div>
+                <DynamicLibraryComponent
+                  uu5Tag="Plus4U5.App.Licence"
+                  organisation={license.organisation}
+                  authorities={license.authorities}
+                  awid={<Uu5Elements.Link href={Environment.appBaseUri} className={Css.text()}>{awid}</Uu5Elements.Link>}
+                  textAlign="left"
+                  className={Css.text()} // Apply text color to the dynamic component
+                />
+              </div>
             </div>
-            <div>
-              <DynamicLibraryComponent
-                uu5Tag="Plus4U5.App.Licence"
-                organisation={license.organisation}
-                authorities={license.authorities}
-                awid={<Uu5Elements.Link href={Environment.appBaseUri}>{awid}</Uu5Elements.Link>}
-                textAlign="left"
-                className={Css.license()}
-              />
+            <div className={Css.logos()}>
+              <img height={80} src="assets/plus4u.svg" />
+              <img height={80} src="assets/unicorn.svg" />
             </div>
           </div>
-          <div className={Css.logos()}>
-            <img height={80} src="assets/plus4u.svg" />
-            <img height={80} src="assets/unicorn.svg" />
-          </div>
-        </div>
-      </div>
-    ) : (
+        </BackgroundProvider>
+      </div>) : (
       <Plus4U5App.SpaPending />
     );
   },

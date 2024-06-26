@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Link } from 'uu5g05-elements';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
 const SensorCard = ({ sensor }) => {
   const temperature = sensor.lastTemperature ? `${sensor.lastTemperature.toFixed(1)}°C` : 'N/A';
@@ -20,20 +21,27 @@ const SensorCard = ({ sensor }) => {
         margin: '10px 20px',
       }}>
       <CardContent >
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
           Sensor Details
         </Typography>
-        <Typography variant="h5" component="div" color='#0D3133'>
+        <Typography variant="h5" component="div" color='white'>
           {sensor.name || sensor.code}
         </Typography>
-        <Typography sx={{ mb: 1.5, fontSize: '60px', textAlign:'center' }} color="#30263E">
+        <Typography sx={{ mb: 1.5, fontSize: '60px', textAlign:'center' }} color="#00FFE5">
            {temperature}
         </Typography>
       </CardContent>
       <CardActions>
         <Link href={`sensor?id=${sensor.id}`}>
-          <Button size="small" color="secondary">
-              View Details
+          <Button sx={{
+            alignItems: 'center',
+            margin: 'auto',
+            color: '#E50099',
+            mx: 1, 
+            '&:hover': { color: '#00FFE5' },
+            '&:active': { transform: 'scale(1.2)' },
+          }}>
+              <InfoRoundedIcon />nfo
             </Button>
         </Link>
       </CardActions>

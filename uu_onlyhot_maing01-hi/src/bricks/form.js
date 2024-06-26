@@ -8,7 +8,7 @@ const Css = {
   button: () =>
     Config.Css.css({
       background: 'transparent !important',
-      color: 'purple'
+      color: '#E50099'
     })
 };
 

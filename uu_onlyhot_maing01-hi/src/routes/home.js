@@ -10,11 +10,12 @@ import SensorContext from "../bricks/sensor/sensor-context.js";
 import GatewayRow from "../bricks/gateway/gateway-row.js";
 import GatewayEditForm from "../bricks/gateway/gateway-edit-form.js";
 import Confirm from "../bricks/confirm.js";
+import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 
 const Css = {
   main: () =>
     Config.Css.css({
-      background: "linear-gradient(150deg, #FAF6FF, #FAF0F2, #FAF6FF)",
+      background: "#23226e",
       minHeight: "100vh"
   }),
   box: () =>
@@ -26,7 +27,7 @@ const Css = {
       margin: "0 auto",
       flexWrap: "wrap",
       flexDirection: "column",
-      color: "black",
+      color: "f34fc7",
       "& > *": { display: "block", width: "100%" },
       "& h1": { marginBottom: "45px" }
     }),
@@ -34,7 +35,7 @@ const Css = {
     Config.Css.css({
       fontSize: '50px',
       color: 'transparent',
-      backgroundImage: 'linear-gradient(45deg, #2E0F15, #F3ECFB)',
+      backgroundImage: 'linear-gradient(90deg, #00FFE5, #F7FF00)',
       WebkitBackgroundClip: 'text',
       backgroundClip: 'text'
     }),  
@@ -127,7 +128,17 @@ let Home = createVisualComponent({
 
           <div className={Css.box()}>
             <h1 className={Css.header()}>Gateways</h1>
-            <Button onClick={handleCreateFormOpen} color="secondary" sx={{width:"180px", alignItems:'center', margin:'auto'}}>Create new gateway</Button>
+            <Button 
+              onClick={handleCreateFormOpen}
+              startIcon={<AddCircleOutlineRoundedIcon />}  
+              sx={{
+                width: "230px",
+                margin: 'auto',
+                backgroundColor: '#e50099', 
+                color: 'white', 
+                '&:hover': {backgroundColor: '#ff42b4a0'},
+                '&:active': {backgroundColor: '#e50099c6'}, 
+              }}>Add new gateway</Button>
             {renderGateways(gatewayContext.listData, sensorContext.listData)}
           </div>
           
