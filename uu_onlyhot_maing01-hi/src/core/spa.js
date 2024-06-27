@@ -4,6 +4,7 @@ import Uu5Elements from "uu5g05-elements";
 import Plus4U5 from "uu_plus4u5g02";
 import Plus4U5App from "uu_plus4u5g02-app";
 import Sensor from "../routes/sensor.js"
+import SensorList from "../routes/sensor-list.js"
 import Config from "./config/config.js";
 import Home from "../routes/home.js";
 import GatewayDataProvider from "../bricks/gateway/gateway-data-provider.js";
@@ -20,6 +21,7 @@ const ROUTE_MAP = {
   "": { redirect: "home" },
   home: (props) => <GatewayDataProvider><SensorDataProvider><Home {...props} /></SensorDataProvider></GatewayDataProvider>,
   sensor: (props) => <SensorDataProvider><Sensor {...props} /></SensorDataProvider>,
+  sensorList: (props) => <SensorDataProvider><SensorList {...props} /></SensorDataProvider>,
   about: (props) => <About {...props} />,
   "sys/uuAppWorkspace/initUve": (props) => <InitAppWorkspace {...props} />,
   controlPanel: (props) => <ControlPanel {...props} />,

@@ -13,7 +13,11 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 
-const pages = ['Home', 'About', 'Sensor'];
+const pages = [
+  {name:'Home', route: 'home'},
+  {name:'About', route: 'about'},
+  {name:'Sensors', route: 'sensorList'}
+];
 
 const ResponsiveAppBar = () => {
   const [, setRoute] = useRoute();
@@ -28,8 +32,7 @@ const ResponsiveAppBar = () => {
   };
 
   const navigateTo = (page) => {
-    const route = page.toLowerCase(); 
-    setRoute(route);
+    setRoute(page);
     handleCloseNavMenu();
   };
 
@@ -99,8 +102,8 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => navigateTo(page)}>
-                  <Typography textAlign="center" sx={{ color: '#FFFFFF' }}>{page}</Typography>
+                <MenuItem key={page.route} onClick={() => navigateTo(page.route)}>
+                  <Typography textAlign="center" sx={{ color: '#FFFFFF' }}>{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -132,11 +135,11 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={() => navigateTo(page)}
+                key={page.name}
+                onClick={() => navigateTo(page.route)}
                 sx={{ my: 2, color: '#E50099', display: 'block', fontSize:'17px' }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>

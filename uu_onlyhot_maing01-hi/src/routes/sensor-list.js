@@ -15,6 +15,7 @@ import { Chart } from 'react-chartjs-2';
 //@@viewOff:imports
 
 //@@viewOn:constants
+const SENSORS_PER_PAGE = 5;
 //@@viewOff:constants
 
 //@@viewOn:css
@@ -55,11 +56,13 @@ const Css = {
 //@@viewOff:css
 
 //@@viewOn:helpers
+const paginate = (array, page_size, page_number) =>
+  array.slice((page_number - 1) * page_size, page_number * page_size);
 //@@viewOff:helpers
 
-let Sensor = createVisualComponent({
+let SensorList = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "Sensor",
+  uu5Tag: Config.TAG + "SensorList",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -77,113 +80,64 @@ let Sensor = createVisualComponent({
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-
-      sensorContext.callsMap.sensorGet({ id: props.params.id });
-
-      const start = new Date();
-      const end = new Date();
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-      sensorContext.callsMap.sensorGetData({
-        sensorId: props.params.id,
-        from: start.getTime(),
-        to: end.getTime(),
-      });
-
-    }, [props.params]);
+      sensorContext.callsMap.sensorList();
+      // todo call some magic filtered paginated backend maybe
+    }, []);
 
     //@@viewOff:private
 
     //@@viewOn:interface
+    const handlePageChange = (event, value) => {
+      setPage(value);
+    };
     //@@viewOff:interface
 
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
 
-    let chartdata =
-      (sensorContext.sensorData && sensorContext.sensorData.itemList) || [];
 
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top",
-          display: false,
-        },
-        title: {
-          display: true,
-          text: "Teploty - denní graf",
-          color: "white",
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-        y: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-      },
-    };
-
-    const formatter = new Intl.DateTimeFormat("cs-CZ", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const labels = chartdata.map((row) => {
-      const d = new Date(row.timestamp);
-      return formatter.format(d);
-    });
-
-    const data = {
-      labels,
-      datasets: [
-        {
-          data: chartdata.map((row) => row.temperature.toFixed(1)),
-          backgroundColor: "#E50099",
-        },
-      ],
-    };
-
-    let sensorName = (props.params && props.params.id) || "N/A";
-    if (sensorContext.data) {
-      sensorName = sensorContext.data.name
-        ? sensorContext.data.name
-        : sensorContext.data.code;
-    }
+    const sensors = sensorContext.listData.itemList || [];
+    const paginatedSensors = paginate(sensors, SENSORS_PER_PAGE, page);
 
     return (
       <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
         <BackgroundProvider background="dark">
           <RouteBar />
           <div className={Css.box()}>
-            <h1 className={Css.header()}>Sensor {sensorName}</h1>
-            <div style={{ color: "white", margin: "20px" }}>
-              todo nějaké detaily, edit, grafy...
-            </div>
-            <Chart type="bar" options={options} data={data} />
+            <h1 className={Css.header()}>Search for a Sensor</h1>
+            <p style={{color:'white', textAlign:'center', margin: 'auto', }}>Use sensor's name or ID</p>
+            <SensorSearch />
+            <h2 className={Css.header()}>All Sensors</h2>
+            {paginatedSensors.map((sensor) => (
+              <SensorCard key={sensor.id} sensor={sensor} />
+            ))}
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <Pagination
+                count={Math.ceil(sensors.length / SENSORS_PER_PAGE)}
+                page={page}
+                onChange={handlePageChange}
+                sx={{"& .MuiPaginationItem-root": {
+                      color: 'white',
+                    },
+                    "& .MuiPaginationItem-root.Mui-selected": {
+                      color: 'white',
+                      backgroundColor: '#E50099',
+                    },
+                  }}
+              />
+            </Box>
           </div>
         </BackgroundProvider>
       </div>
     );
+
     //@@viewOff:render
   },
 });
 
-Sensor = withRoute(Sensor, { authenticated: true });
+SensorList = withRoute(SensorList, { authenticated: true });
 
 //@@viewOn:exports
-export { Sensor };
-export default Sensor;
+export { SensorList };
+export default SensorList;
 //@@viewOff:exports
