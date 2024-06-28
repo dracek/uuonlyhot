@@ -10,27 +10,25 @@ const Css = {
     Config.Css.css({}),
 };
 
-let GatewayEditForm = createVisualComponent({
-  uu5Tag: Config.TAG + "GatewayEditForm",
+let SensorEditForm = createVisualComponent({
+  uu5Tag: Config.TAG + "SensorEditForm",
 
   render(props) {
 
-    const editMode = props.gateway != null;
-
-    const initialValue = editMode ? {"name": props.gateway.name} : {};
+    const initialValue = {name: props.sensor};
 
     const attrs = Utils.VisualComponent.getAttrs(props, Css.main());
 
     return (
       <div {...attrs}>
-          <Uu5Elements.Modal header={editMode ? "Edit gateway" : "Create new gateway"} collapsible={false} open={true} onClose={props.onClose}>
+          <Uu5Elements.Modal header={"Edit sensor"} collapsible={false} open={true} onClose={props.onClose}>
             <Form onCancel={props.onClose} onSubmit={props.onSubmit} initialValue={initialValue} disableLeaveConfirmation={true}>
   
               <Box sx={{ display: "grid", rowGap: 3 }}>
                 <Uu5Forms.FormText
                   name="name"
-                  label="Gateway name"
-                  placeholder="Type gateway name..."
+                  label="Sensor name"
+                  placeholder="Type sensor name..."
                   borderRadius = "expressive"
                   required
                 />
@@ -44,5 +42,5 @@ let GatewayEditForm = createVisualComponent({
   }
 });
 
-export { GatewayEditForm };
-export default GatewayEditForm;
+export { SensorEditForm };
+export default SensorEditForm;

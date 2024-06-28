@@ -86,6 +86,7 @@ const SensorDataProvider = createComponent({
           let res = await Calls.sensorUpdate(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
+          infoMsg({message:`Sensor ${dtoIn.name ? dtoIn.name : "" } edited.`});
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot update sensor.'})
@@ -99,6 +100,7 @@ const SensorDataProvider = createComponent({
           let res = await Calls.sensorDelete(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
+          infoMsg({message:`Sensor deleted.`});
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot delete sensor.'})

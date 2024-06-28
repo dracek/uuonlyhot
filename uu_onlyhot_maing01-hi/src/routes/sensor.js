@@ -1,14 +1,16 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, BackgroundProvider, useSession, useContext, useEffect, useState } from "uu5g05";
+import { Utils, createVisualComponent, BackgroundProvider, useSession, useContext, useEffect, useState, useRoute } from "uu5g05";
 import { withRoute } from "uu_plus4u5g02-app";
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
-import Box from '@mui/material/Box';
-import SensorCard from "../bricks/sensor/sensor-card.js";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 import SensorContext from "../bricks/sensor/sensor-context.js";
-import SensorSearch from "../bricks/sensor/sensor-search.js";
+import React from 'react';
+import Button from '@mui/material/Button';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import Confirm from "../bricks/confirm.js";
+import SensorEditForm from "../bricks/sensor/sensor-edit-form.js";
 
 import 'chart.js/auto';
 import { Chart } from 'react-chartjs-2';
@@ -74,7 +76,18 @@ let Sensor = createVisualComponent({
     //@@viewOn:private
     const { identity } = useSession();
     const sensorContext = useContext(SensorContext);
-    const [page, setPage] = useState(1);
+    const [, setRoute] = useRoute();
+
+    const [editSensor, setEditSensor] = useState(false);
+    const [deleteSensor, setDeleteSensor] = useState(false);
+
+    let sensorId = props.params && props.params.id;
+    let sensorName = sensorId || "N/A";
+    if (sensorContext.data) {
+      sensorName = sensorContext.data.name
+        ? sensorContext.data.name
+        : sensorContext.data.code;
+    }
 
     useEffect(() => {
 
@@ -85,12 +98,42 @@ let Sensor = createVisualComponent({
       start.setHours(0, 0, 0, 0);
       end.setHours(23, 59, 59, 999);
       sensorContext.callsMap.sensorGetData({
-        sensorId: props.params.id,
+        sensorId: sensorId,
         from: start.getTime(),
         to: end.getTime(),
       });
 
     }, [props.params]);
+
+
+    const handleEditFormOpen = () => {
+      setEditSensor(true);
+    };
+
+    const handleEditFormClose = () => {
+      setEditSensor(false);
+    };
+    
+    const handleEditFormSubmit = async (data) => {
+      await sensorContext.callsMap.sensorUpdate({id: sensorId, name: data.name});
+      setEditSensor(false);
+      sensorContext.callsMap.sensorGet({ id: props.params.id });
+    };
+
+    const handleDeleteFormOpen = () => {
+      setDeleteSensor(true);
+    };
+
+    const handleDeleteFormClose = () => {
+      setDeleteSensor(false);
+    };
+
+    const handleDeleteFormConfirm = async () => {
+      await sensorContext.callsMap.sensorDelete({id: sensorId});
+      setDeleteSensor(false);
+      setRoute('home');
+    };
+
 
     //@@viewOff:private
 
@@ -156,12 +199,7 @@ let Sensor = createVisualComponent({
       ],
     };
 
-    let sensorName = (props.params && props.params.id) || "N/A";
-    if (sensorContext.data) {
-      sensorName = sensorContext.data.name
-        ? sensorContext.data.name
-        : sensorContext.data.code;
-    }
+
 
     return (
       <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
@@ -169,11 +207,46 @@ let Sensor = createVisualComponent({
           <RouteBar />
           <div className={Css.box()}>
             <h1 className={Css.header()}>Sensor {sensorName}</h1>
+            <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white' }}>
+
+              <Button
+                onClick={handleEditFormOpen}
+                sx={{
+                  alignItems: 'center',
+                  margin: 'auto',
+                  color: '#E50099',
+                  mx: 1, 
+                  '&:hover': { color: '#00FFE5' },
+                  '&:active': { transform: 'scale(1.2)' },
+                }}
+              >
+                <EditNoteRoundedIcon fontSize="large" />
+              </Button>
+
+              <Button
+                onClick={handleDeleteFormOpen}
+                sx={{
+                  alignItems: 'center',
+                  margin: 'auto',
+                  color: '#E50099',
+                  mx: 1, 
+                  '&:hover': { color: '#00FFE5' },
+                  '&:active': { transform: 'scale(1.2)' },
+                }}
+              >
+                <HighlightOffRoundedIcon fontSize="large" />
+              </Button>
+            </Typography>
+
             <div style={{ color: "white", margin: "20px" }}>
               todo nějaké detaily, edit, grafy...
             </div>
             <Chart type="bar" options={options} data={data} />
           </div>
+
+          {deleteSensor && <Confirm header={`Delete ${sensorName}?`} info="All data will be erased." onClose={handleDeleteFormClose} onConfirm={handleDeleteFormConfirm} buttonTitle="DELETE"></Confirm>}
+          {editSensor && <SensorEditForm onSubmit={handleEditFormSubmit} onClose={handleEditFormClose} sensor={sensorName} />}
+
         </BackgroundProvider>
       </div>
     );
