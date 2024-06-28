@@ -12,6 +12,8 @@
     "@mui/icons-material": "^5.15.16",
     "@mui/material": "^5.15.16",
     "chart.js": "^4.4.2",
+    "chartjs-adapter-moment": "^1.0.1",
+    "moment": "^2.30.1",
     "react-chartjs-2": "^5.2.0",
     "uu_plus4u5g02": "^1.22.2",
     "uu_plus4u5g02-app": "^1.22.2",

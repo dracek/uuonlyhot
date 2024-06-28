@@ -12,6 +12,8 @@ import SensorContext from "../bricks/sensor/sensor-context.js";
 
 import 'chart.js/auto';
 import { Chart } from 'react-chartjs-2';
+import moment from "moment";
+import 'chartjs-adapter-moment';
 
 
 //@@viewOff:imports
@@ -104,25 +106,45 @@ let Sensor = createVisualComponent({
           text: 'Teploty - denní graf',
         },
       },
+      parsing: {
+        xAxisKey: 'timestamp',
+        yAxisKey: 'temperature'
+      },
+      
+        scales: {
+            x: {
+                //min: '2021-11-06 12:00:00',
+                //max: '2021-11-07 12:00:00',
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        quarter: 'MMM YYYY'
+                    }
+                },
+                ticks: {
+                  callback: function(value, index, ticks) {
+                      //console.log(value);
+                      //console.log(typeof value);
+                      return moment(value).format("HH:mm");
+
+                  }
+              }
+            }
+        }
+    
+      
     };
 
     const formatter = new Intl.DateTimeFormat('cs-CZ', { hour: '2-digit', minute: '2-digit'});
 
-    const labels = chartdata.map(row => {
-      const d = new Date(row.timestamp);
-      return formatter.format(d);
-    });    
-    
-    const data = {
-      labels,
-      datasets: [
-        {
-          //label: 'Dataset 1',
-          data: chartdata.map(row => row.temperature.toFixed(1)),
-          backgroundColor: 'rgba(127,127,255, 0.5)',
-        }
-      ],
-    };
+    //
+
+
+    let data = {
+      datasets: [{
+          data: chartdata
+      }],
+    }
 
     let sensorName = props.params && props.params.id || "N/A";
     if(sensorContext.data){

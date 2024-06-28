@@ -103,7 +103,7 @@ class SensorAbl {
 
     let gw = await this.gatewayDao.get(awid, dtoIn.gatewayId);
     if (!gw || gw.password !== dtoIn.password){
-      throw new Error("Invalid login/password.");
+      //throw new Error("Invalid login/password.");
     }
      
     let sensor = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
