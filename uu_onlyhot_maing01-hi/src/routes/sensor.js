@@ -11,9 +11,8 @@ import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import Confirm from "../bricks/confirm.js";
 import SensorEditForm from "../bricks/sensor/sensor-edit-form.js";
+import DayChart from "../bricks/sensor/day-chart.js";
 
-import 'chart.js/auto';
-import { Chart } from 'react-chartjs-2';
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -90,19 +89,7 @@ let Sensor = createVisualComponent({
     }
 
     useEffect(() => {
-
       sensorContext.callsMap.sensorGet({ id: props.params.id });
-
-      const start = new Date();
-      const end = new Date();
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-      sensorContext.callsMap.sensorGetData({
-        sensorId: sensorId,
-        from: start.getTime(),
-        to: end.getTime(),
-      });
-
     }, [props.params]);
 
 
@@ -143,64 +130,6 @@ let Sensor = createVisualComponent({
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
 
-    let chartdata =
-      (sensorContext.sensorData && sensorContext.sensorData.itemList) || [];
-
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top",
-          display: false,
-        },
-        title: {
-          display: true,
-          text: "Teploty - denní graf",
-          color: "white",
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-        y: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-      },
-    };
-
-    const formatter = new Intl.DateTimeFormat("cs-CZ", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const labels = chartdata.map((row) => {
-      const d = new Date(row.timestamp);
-      return formatter.format(d);
-    });
-
-    const data = {
-      labels,
-      datasets: [
-        {
-          data: chartdata.map((row) => row.temperature.toFixed(1)),
-          backgroundColor: "#E50099",
-        },
-      ],
-    };
-
-
-
     return (
       <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
         <BackgroundProvider background="dark">
@@ -239,9 +168,11 @@ let Sensor = createVisualComponent({
             </Typography>
 
             <div style={{ color: "white", margin: "20px" }}>
-              todo nějaké detaily, edit, grafy...
+              ...
             </div>
-            <Chart type="bar" options={options} data={data} />
+
+            <DayChart sensor={sensorId} />
+
           </div>
 
           {deleteSensor && <Confirm header={`Delete ${sensorName}?`} info="All data will be erased." onClose={handleDeleteFormClose} onConfirm={handleDeleteFormConfirm} buttonTitle="DELETE"></Confirm>}
