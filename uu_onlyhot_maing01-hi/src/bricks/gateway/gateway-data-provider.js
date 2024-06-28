@@ -87,7 +87,7 @@ const GatewayDataProvider = createComponent({
           let res = await Calls.gatewayUpdate(dtoIn);
           setStatus(STATUS_DONE);
           setData(res);
-          infoMsg({message:`Gateway ${dtoIn.name} edited.`});
+          infoMsg({message:`Gateway ${dtoIn.name ? dtoIn.name : "" } edited.`});
       } catch (error) {
           setStatus(STATUS_ERROR);
           alertMsg({message: 'Cannot update gateway.'})

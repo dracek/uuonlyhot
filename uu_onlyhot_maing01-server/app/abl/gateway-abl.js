@@ -45,6 +45,12 @@ class GatewayAbl {
     this.validator = Validator.load();
     this.dao = DaoFactory.getDao("gateway");
   }
+  
+  // do not send passwords to FE
+  sanitizeData(dtoOut) {
+    delete dtoOut.password;
+    return dtoOut;
+  }
 
   async update(awid, session, dtoIn) {
 
@@ -63,12 +69,12 @@ class GatewayAbl {
       throw new Errors.Update.GatewayNotPresent({ uuAppErrorMap });  
     }
 
-    const existing = await this.dao.getByName(awid, dtoIn.name);
-    if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
-      console.log(existing);
-      console.log(dtoIn);
-      throw new Errors.Update.DuplicateName({ uuAppErrorMap });
-    }  
+    if (dtoIn.name !== undefined){
+      const existing = await this.dao.getByName(awid, dtoIn.name);
+      if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
+        throw new Errors.Update.DuplicateName({ uuAppErrorMap });
+      }
+    }
 
     let dtoOut;
     try {
@@ -81,7 +87,7 @@ class GatewayAbl {
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+    return this.sanitizeData(dtoOut);
   }
 
   async delete(awid, session, dtoIn) {
@@ -145,7 +151,7 @@ class GatewayAbl {
     }
     
     dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+    return this.sanitizeData(dtoOut);
   }
 
   async get(awid, session, dtoIn) {
@@ -167,7 +173,7 @@ class GatewayAbl {
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+    return this.sanitizeData(dtoOut);
   }
 
   async list(awid, session, dtoIn) {
@@ -199,6 +205,10 @@ class GatewayAbl {
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
+    dtoOut.itemList.forEach(item => {
+      this.sanitizeData(item);
+    });
 
     return dtoOut;
    

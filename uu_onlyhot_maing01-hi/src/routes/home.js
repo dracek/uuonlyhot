@@ -9,6 +9,7 @@ import GatewayContext from "../bricks/gateway/gateway-context.js";
 import SensorContext from "../bricks/sensor/sensor-context.js";
 import GatewayRow from "../bricks/gateway/gateway-row.js";
 import GatewayEditForm from "../bricks/gateway/gateway-edit-form.js";
+import GatewayPswdForm from "../bricks/gateway/gateway-password-form.js";
 import Confirm from "../bricks/confirm.js";
 
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
@@ -52,6 +53,7 @@ let Home = createVisualComponent({
 
     const [createGateway, setCreateGateway] = useState(false); 
     const [editGateway, setEditGateway] = useState(false);
+    const [pswdGateway, setPswdGateway] = useState(false);
     const [deleteGateway, setDeleteGateway] = useState(false);
 
     useEffect(() => {
@@ -90,6 +92,21 @@ let Home = createVisualComponent({
     };
 
 
+    const handlePswdFormOpen = (gateway) => {
+      setPswdGateway(Object.assign({}, gateway));
+    };
+
+    const handlePswdFormClose = () => {
+      setPswdGateway(false);
+    };
+    
+    const handlePswdFormSubmit = async (data) => {
+      await gatewayContext.callsMap.gatewayUpdate({id: pswdGateway.id, password: data.password});
+      setPswdGateway(false);
+      gatewayContext.callsMap.gatewayList();
+    };
+
+
     const handleDeleteFormOpen = (gateway) => {
       setDeleteGateway(Object.assign({}, gateway));
     };
@@ -113,7 +130,7 @@ let Home = createVisualComponent({
         <div>
           {data.itemList.map((gateway) => {
             const sensors = sensorData.itemList ? sensorData.itemList.filter((sen) => sen.gatewayId === gateway.id) : [];
-            return <GatewayRow key={gateway.id} gateway={gateway} sensors={sensors} onEdit={handleEditFormOpen} onDelete={handleDeleteFormOpen} />;
+            return <GatewayRow key={gateway.id} gateway={gateway} sensors={sensors} onEdit={handleEditFormOpen} onPswd={handlePswdFormOpen} onDelete={handleDeleteFormOpen} />;
           })}
         </div>
       );
@@ -145,7 +162,7 @@ let Home = createVisualComponent({
           
           {createGateway && <GatewayEditForm onSubmit={handleCreateFormSubmit} onClose={handleCreateFormClose} />}
           {editGateway && <GatewayEditForm onSubmit={handleEditFormSubmit} onClose={handleEditFormClose} gateway={editGateway} />}
-
+          {pswdGateway && <GatewayPswdForm onSubmit={handlePswdFormSubmit} onClose={handlePswdFormClose} gateway={pswdGateway} />}
           {deleteGateway && <Confirm header={`Delete ${deleteGateway.name}?`} info="All data will be erased." onClose={handleDeleteFormClose} onConfirm={handleDeleteFormConfirm} buttonTitle="DELETE"></Confirm>}
 
           {/**<Uu5Elements.Modal header="Create new gateway" collapsible={false} open={isFormVisible} onClose={handleFormClose}>

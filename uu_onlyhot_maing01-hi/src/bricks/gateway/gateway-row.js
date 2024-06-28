@@ -6,7 +6,9 @@ import SensorCard from '../sensor/sensor-card.js';
 import Button from '@mui/material/Button';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
 import Config from '../config/config.js';
+
 
 const Css = {
   row: () =>
@@ -23,7 +25,7 @@ const Css = {
     }),
 };
 
-const GatewayRow = ({ gateway, sensors, onEdit, onDelete }) => {
+const GatewayRow = ({ gateway, sensors, onEdit, onPswd, onDelete }) => {
   return (
     <Box className={Css.row()}>
       <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white' }}>
@@ -40,6 +42,20 @@ const GatewayRow = ({ gateway, sensors, onEdit, onDelete }) => {
           }}
         >
           <EditNoteRoundedIcon fontSize="large" />
+        </Button>
+
+        <Button
+          onClick={() => onPswd(gateway)}
+          sx={{
+            alignItems: 'center',
+            margin: 'auto',
+            color: '#E50099',
+            mx: 1, 
+            '&:hover': { color: '#00FFE5' },
+            '&:active': { transform: 'scale(1.2)' },
+          }}
+        >
+          <PasswordRoundedIcon fontSize="large" />
         </Button>
 
         <Button
