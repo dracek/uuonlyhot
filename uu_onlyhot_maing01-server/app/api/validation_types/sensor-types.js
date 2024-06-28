@@ -11,9 +11,7 @@ const sensorGetDtoInType = shape({
 
 const sensorUpdateDtoInType = shape({
     id: string().isRequired(),
-    gatewayId: string().isRequired(),
-    code: string().isRequired(),
-    name: string().isRequired(),
+    name: string().isRequired()
 });
 
 const sensorDeleteDtoInType = shape({
@@ -21,7 +19,8 @@ const sensorDeleteDtoInType = shape({
 });
 
 const sensorListDtoInType = shape({
-    gatewayId: string()
+    gatewayId: string(),
+    filter: string()
 });
 
 const sensorImportDataDtoInType = shape({

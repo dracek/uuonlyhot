@@ -219,11 +219,6 @@ class SensorAbl {
       throw new Errors.Update.SensorNotPresent({ uuAppErrorMap });  
     }
 
-    const existing = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
-    if ((existing !== null) && (existing.id.toString() !== dtoIn.id)){
-      throw new Errors.Update.SensorDuplicateCode({ uuAppErrorMap });
-    }  
-
     let dtoOut;
     try {
       dtoOut = await this.dao.update(awid, dtoIn);
@@ -286,6 +281,16 @@ class SensorAbl {
       // todo owner or public
       //ownerId : session.getIdentity().getUuIdentity()
     };
+
+    if (dtoIn.filter !== undefined) {
+       filter =  {
+        $or: [
+        { name: { $regex: dtoIn.filter, $options: 'i' } },
+        { code: { $regex: dtoIn.filter, $options: 'i' } },
+        ]
+      }
+    }
+    
 
     let dtoOut;
     try {

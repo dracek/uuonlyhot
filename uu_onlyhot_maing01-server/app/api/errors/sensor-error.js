@@ -63,14 +63,6 @@ const Update = {
     }
   },
 
-  SensorDuplicateCode: class extends OnlyhotMainUseCaseError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Update.UC_CODE}sensorDuplicateCode`;
-      this.message = DUPLICATE_SENSOR_CODE;
-    }
-  },
-
   UpdateDaoFailed: class extends OnlyhotMainUseCaseError {
     constructor() {
       super(...arguments);
