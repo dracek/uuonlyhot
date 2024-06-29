@@ -55,7 +55,6 @@ class SensorAbl {
 
   async getData(awid, session, dtoIn) {
 
-    // todo type & validace!
     let uuAppErrorMap = {};
 
     let sensor = await this.dao.get(awid, dtoIn.sensorId);
@@ -66,7 +65,7 @@ class SensorAbl {
 
     let filter = { $and: [
         { "sensorId": { $eq: dtoIn.sensorId }},
-        { "timestamp": { $gte: Number(dtoIn.from) }},  // fix number to string  FE calls auto conversion!
+        { "timestamp": { $gte: Number(dtoIn.from) }},
         { "timestamp": { $lt: Number(dtoIn.to) }}
       ]};
 
@@ -76,7 +75,6 @@ class SensorAbl {
 
     } catch (e) {
       if (e instanceof ObjectStoreError) {
-        //todo another error
         throw new Errors.List.ListDaoFailed({ uuAppErrorMap }, e);
       }
       throw e;
@@ -140,13 +138,19 @@ class SensorAbl {
 
     let gw = await this.gatewayDao.get(awid, dtoIn.gatewayId);
     if (!gw || gw.password !== dtoIn.password){
-      throw new Error("Invalid login/password.");
+      throw new Errors.ImportData.InvalidLogin({ uuAppErrorMap });
     }
      
     let sensor = await this.dao.getByCode(awid, dtoIn.gatewayId, dtoIn.code);
     if (sensor === null){
-      //todo try catch
-      sensor = await this.dao.create({awid, gatewayId: dtoIn.gatewayId, code: dtoIn.code});
+      try {
+        sensor = await this.dao.create({awid, gatewayId: dtoIn.gatewayId, code: dtoIn.code});
+      } catch (e) {
+        if (e instanceof ObjectStoreError) {
+            throw new Errors.ImportData.CreateSensorFailed({ uuAppErrorMap }, e);
+        }
+        throw e;
+      }
     }
 
     let dtoOut = {
@@ -162,10 +166,16 @@ class SensorAbl {
         timestamp : element.timestamp,
         temperature: element.temperature
       };
-      //todo try catch + error
-      this.dataDao.upsert(item); 
-    });
 
+      try {
+        this.dataDao.upsert(item); 
+      } catch (e) {
+        if (e instanceof ObjectStoreError) {
+            throw new Errors.ImportData.CreateDataFailed({ uuAppErrorMap }, e);
+        }
+        throw e;
+      }
+    });
 
     if (dtoIn.data.length > 0){
       const latestData = dtoIn.data.reduce((prev, current) => (prev.y > current.y) ? prev : current);
@@ -208,7 +218,7 @@ class SensorAbl {
         dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
         if (e instanceof ObjectStoreError) {
-            throw new Errors.Create.CreateDaoFailed({ uuAppErrorMap }, e)
+            throw new Errors.Create.CreateDaoFailed({ uuAppErrorMap }, e);
         }
         throw e;
     }

@@ -146,6 +146,30 @@ const ImportData = {
       this.message = INVALID_DTOIN;
     }
   },
+
+  InvalidLogin: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ImportData.UC_CODE}invalidLogin`;
+      this.message = "Password is not correct.";
+    }
+  },
+
+  CreateSensorFailed: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}createSensorFailed`;
+      this.message = "Create sensor failed in DAO";
+    }
+  },
+
+  CreateDataFailed: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}createDataFailed`;
+      this.message = "Create data failed in DAO";
+    }
+  },
   
 };
 
