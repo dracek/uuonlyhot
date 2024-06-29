@@ -1,5 +1,5 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, useSession, useContext, useEffect } from "uu5g05";
+import { Utils, createVisualComponent, useSession, useContext, useEffect, useState } from "uu5g05";
 
 import Config from "../config/config.js";
 import SensorContext from "./sensor-context.js";
@@ -10,6 +10,18 @@ import 'chartjs-adapter-moment';
 
 import 'chart.js/auto';
 import { Chart } from 'react-chartjs-2';
+
+import IconButton from '@mui/material/IconButton';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import Typography from '@mui/material/Typography';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { styled } from '@mui/material/styles';
+
+import dayjs from "dayjs";
+
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -50,6 +62,28 @@ const Css = {
       backgroundClip: "text",
     }),
 };
+
+const StyledDateCalendar = styled(DateCalendar)(({ theme }) => ({
+  backgroundColor: 'white',
+  '& .MuiPickersDay-root': {
+    color: 'black',
+  },
+  '& .MuiPickersDay-root.Mui-selected': {
+    backgroundColor: '#E50099',
+    color: 'white',
+  },
+  '& .MuiPickersDay-root.Mui-selected:hover': {
+    backgroundColor: '#E50099',
+    color: 'white',
+  },
+  '& .MuiPickersDay-root:hover': {
+    backgroundColor: '#f0f0f0',
+  },
+  '& .MuiPickersCalendarHeader-root': {
+    backgroundColor: '#00FFE5',
+    color: 'black',
+  },
+}));
 //@@viewOff:css
 
 //@@viewOn:helpers
@@ -73,22 +107,27 @@ let DayChart = createVisualComponent({
     const { identity } = useSession();
     const sensorContext = useContext(SensorContext);
 
+    const [selectedDate, setSelectedDate] = useState(dayjs());
+    const [isCalendarVisible, setCalendarVisibility] = useState(false);
+
     let sensorId = props.sensor;
 
-    const start = new Date();
-    const end = new Date();
-    start.setHours(0, 0, 0, 0);
-    end.setHours(23, 59, 59, 999);
+    const start = selectedDate.startOf('day').unix() * 1000;
+    const end = selectedDate.endOf('day').unix() * 1000;
 
     useEffect(() => {
-
       sensorContext.callsMap.sensorGetData({
         sensorId: sensorId,
-        from: start.getTime(),
-        to: end.getTime(),
+        from: start,
+        to: end,
       });
 
-    }, [props.sensor]);
+    }, [props.sensor, selectedDate]);
+
+    let handleDateChange = (data) => {
+      setSelectedDate(data);
+      setCalendarVisibility(false);
+    } 
 
     //@@viewOff:private
 
@@ -119,7 +158,6 @@ let DayChart = createVisualComponent({
                     return date.format("HH:mm");
                 },
                 label: function(context) {
-                    //console.log("ctx",context);
                     let label = context.dataset.label || '';
                     if (label) {
                         label += ': ';
@@ -170,7 +208,23 @@ let DayChart = createVisualComponent({
       }
 
     return (
+      <div>
+        <div>
+          <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign: 'center' }}>
+          selected date: {selectedDate.format("DD.MM.")} 
+          
+          <IconButton onClick={() => setCalendarVisibility(true)} sx={{ color: '#E50099', ml: 2 }}>
+            <CalendarTodayIcon fontSize="large" />
+          </IconButton>
+          </Typography>
+        </div>
+          {isCalendarVisible && (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StyledDateCalendar value={dayjs(selectedDate)} onChange={handleDateChange} />
+              </LocalizationProvider>
+            )}
         <Chart type="bar" options={options} data={data} />
+      </div>
     );
     //@@viewOff:render
   },

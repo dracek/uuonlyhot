@@ -7,20 +7,13 @@ import RouteBar from "../core/route-bar.js";
 import SensorContext from "../bricks/sensor/sensor-context.js";
 import React from 'react';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import Confirm from "../bricks/confirm.js";
 import SensorEditForm from "../bricks/sensor/sensor-edit-form.js";
 import DayChart from "../bricks/sensor/day-chart.js";
 import MonthChart from "../bricks/sensor/month-chart.js";
 
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { styled } from '@mui/material/styles';
-import dayjs from 'dayjs';
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -32,7 +25,10 @@ const Css = {
     Config.Css.css({
       background: "#23226e",
       minHeight: "100vh",
-      color: "white",
+      padding: "16px",
+      "@media (min-width: 600px)": {
+        padding: "10px",
+      },
     }),
   box: () =>
     Config.Css.css({
@@ -65,27 +61,6 @@ const Css = {
     }),
 };
 
-const StyledDateCalendar = styled(DateCalendar)(({ theme }) => ({
-  backgroundColor: 'white',
-  '& .MuiPickersDay-root': {
-    color: 'black',
-  },
-  '& .MuiPickersDay-root.Mui-selected': {
-    backgroundColor: '#E50099',
-    color: 'white',
-  },
-  '& .MuiPickersDay-root.Mui-selected:hover': {
-    backgroundColor: '#E50099',
-    color: 'white',
-  },
-  '& .MuiPickersDay-root:hover': {
-    backgroundColor: '#f0f0f0',
-  },
-  '& .MuiPickersCalendarHeader-root': {
-    backgroundColor: '#00FFE5',
-    color: 'black',
-  },
-}));
 //@@viewOff:css
 
 //@@viewOn:helpers
@@ -112,10 +87,7 @@ let Sensor = createVisualComponent({
 
     const [editSensor, setEditSensor] = useState(false);
     const [deleteSensor, setDeleteSensor] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [chartData, setChartData] = useState([]);
-    const [isCalendarVisible, setCalendarVisibility] = useState(false);
-
+    
     let sensorId = props.params && props.params.id;
     let sensorName = sensorId || "N/A";
     if (sensorContext.data) {
@@ -129,26 +101,6 @@ let Sensor = createVisualComponent({
     useEffect(() => {
       sensorContext.callsMap.sensorGet({ id: props.params.id });
     }, [props.params]);
-
-    useEffect(() => {
-      fetchData(selectedDate);
-    }, [selectedDate]);
-
-    const fetchData = (date) => {
-      const start = date.startOf('day').toDate();
-      const end = date.endOf('day').toDate();
-      sensorContext.callsMap.sensorGetData({
-        sensorId: sensorId,
-        from: start.getTime(),
-        to: end.getTime(),
-      }).then((response) => {
-        setChartData(response.itemList || []);
-      });
-    };
-
-    const handleDateChange = (date) => {
-      setSelectedDate(date);
-    };
 
     const handleEditFormOpen = () => {
       setEditSensor(true);
@@ -182,63 +134,7 @@ let Sensor = createVisualComponent({
       setCalendarVisibility(!isCalendarVisible);
     };
 
-    const attrs = Utils.VisualComponent.getAttrs(props);
-
-    let chartdata =
-      (sensorContext.sensorData && sensorContext.sensorData.itemList) || [];
-
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top",
-          display: false,
-        },
-        title: {
-          display: true,
-          text: "Teploty - denní graf",
-          color: "white",
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-        y: {
-          ticks: {
-            color: "white",
-          },
-          grid: {
-            color: "rgba(255, 255, 255, 0.2)",
-          },
-        },
-      },
-    };
-
-    const formatter = new Intl.DateTimeFormat("cs-CZ", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const labels = chartdata.map((row) => {
-      const d = new Date(row.timestamp);
-      return formatter.format(d);
-    });
-
-    const data = {
-      labels,
-      datasets: [
-        {
-          data: chartdata.map((row) => row.temperature.toFixed(1)),
-          backgroundColor: "#E50099",
-        },
-      ],
-    };
+    const attrs = Utils.VisualComponent.getAttrs(props, Css.main());
 
     return (
       <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
@@ -275,18 +171,11 @@ let Sensor = createVisualComponent({
               </Button>
 
              </h1>
-            {isCalendarVisible && (
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <StyledDateCalendar value={selectedDate} onChange={handleDateChange} />
-              </LocalizationProvider>
-            )}
+
             <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign: 'center' }}>
-            current temperature: {temperature} <IconButton onClick={toggleCalendarVisibility} sx={{ color: '#E50099', ml: 2 }}>
-                <CalendarTodayIcon fontSize="large" />
-              </IconButton>
+              current temperature: {temperature} 
             </Typography>
           
-
             <DayChart sensor={sensorId} />
             <MonthChart sensor={sensorId} />
 
