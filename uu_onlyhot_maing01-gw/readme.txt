@@ -7,3 +7,5 @@ node-red 3.1.5 (zaklad)
 node-red-contrib-mongodb4 2.5.2 (pro agregace)
 
 node-red-contrib-cron-plus 2.1.0
+
+node-red-contrib-telegrambot

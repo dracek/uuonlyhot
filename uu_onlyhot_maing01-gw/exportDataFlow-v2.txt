@@ -1,6 +1,6 @@
 [
     {
-        "id": "54ace4d9f27746f2",
+        "id": "90906ed46c0a403c",
         "type": "tab",
         "label": "Export average data",
         "disabled": false,
@@ -8,9 +8,9 @@
         "env": []
     },
     {
-        "id": "e62f89401ab2af8d",
+        "id": "ae455ff7a3eaddc3",
         "type": "debug",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "debug delete old data",
         "active": true,
         "tosidebar": true,
@@ -25,9 +25,9 @@
         "wires": []
     },
     {
-        "id": "d554f67470a84459",
+        "id": "aaad0bf60cea8178",
         "type": "mongodb4",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "clientNode": "5376fae6dc0a9cbe",
         "mode": "collection",
         "collection": "data",
@@ -40,19 +40,18 @@
         "y": 100,
         "wires": [
             [
-                "994ff61cd5b63d26"
+                "1d0d51221732b789"
             ]
         ]
     },
     {
-        "id": "d43803f8bac685b6",
+        "id": "c41bfe3b0a252ca6",
         "type": "function",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "prepare agg pipeline",
-        "func": "const periodInSeconds = 10 * 60;\n\nconst pipeline = [    \n  {\n    $set: {\n      roundedTimestamp: {\n        $add: [\n          { $subtract: [\"$timestamp\", {\n            $mod : [\"$timestamp\", periodInSeconds*1000]\n          }]},\n          periodInSeconds*1000\n        ],\n      }\n    }\n  },\n  {\n    $match: { \n      roundedTimestamp: { $lt: msg.payload.timestamp }\n    },\n  },\n  {\n    $group:\n      {\n        _id: { time: \"$roundedTimestamp\", sensor:'$sensorCode'},\n        temperature: {$avg: \"$temperature\" },\n        count: { $sum: 1 }\n      }\n  },\n  {\n    $set: {\n      timestamp: \"$_id.time\",\n      sensorCode: \"$_id.sensor\"\n    }\n  },\n  {\n    $unset: \"_id\",\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;\n\n\n",
+        "func": "const periodInSeconds = 10 * 60;\n\n// Retrieve the latest temperature from the flow context\nconst latestTemperature = flow.get(\"latestTemperature\");\n\nconst pipeline = [\n  {\n    $set: {\n      roundedTimestamp: {\n        $add: [\n          {\n            $subtract: [\"$timestamp\", {\n              $mod: [\"$timestamp\", periodInSeconds * 1000]\n            }]\n          },\n          periodInSeconds * 1000\n        ],\n      }\n    }\n  },\n  {\n    $match: {\n      roundedTimestamp: { $lt: msg.payload.timestamp }\n    },\n  },\n  {\n    $group:\n    {\n      _id: { time: \"$roundedTimestamp\", sensor: '$sensorCode' },\n      temperature: { $avg: latestTemperature },  // Set temperature using the latestTemperature\n      count: { $sum: 1 }\n    }\n  },\n  {\n    $set: {\n      timestamp: \"$_id.time\",\n      sensorCode: \"$_id.sensor\"\n    }\n  },\n  {\n    $unset: \"_id\",\n  }\n];\n\nmsg.payload = [pipeline];\nreturn msg;\n",
         "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
+        "noerr": 1,
         "initialize": "",
         "finalize": "",
         "libs": [],
@@ -60,48 +59,14 @@
         "y": 100,
         "wires": [
             [
-                "d554f67470a84459"
+                "aaad0bf60cea8178"
             ]
         ]
     },
     {
-        "id": "d6582c9bb6de6257",
-        "type": "cronplus",
-        "z": "54ace4d9f27746f2",
-        "name": "Run!",
-        "outputField": "payload.timestamp",
-        "timeZone": "",
-        "storeName": "",
-        "commandResponseMsgOutput": "output1",
-        "defaultLocation": "",
-        "defaultLocationType": "default",
-        "outputs": 1,
-        "options": [
-            {
-                "name": "schedule1",
-                "topic": "topic1",
-                "payloadType": "date",
-                "payload": "",
-                "expressionType": "cron",
-                "expression": "0 2,17,32,47 * * * *",
-                "location": "",
-                "offset": "0",
-                "solarType": "all",
-                "solarEvents": "sunrise,sunset"
-            }
-        ],
-        "x": 130,
-        "y": 100,
-        "wires": [
-            [
-                "d43803f8bac685b6"
-            ]
-        ]
-    },
-    {
-        "id": "994ff61cd5b63d26",
+        "id": "1d0d51221732b789",
         "type": "switch",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "",
         "property": "payload",
         "propertyType": "msg",
@@ -120,17 +85,17 @@
         "y": 260,
         "wires": [
             [
-                "e27eba8c7fb62be4"
+                "11be2a95ad716ae7"
             ],
             [
-                "6f9194b042fe84b0"
+                "9ad7ebd29d08ab63"
             ]
         ]
     },
     {
-        "id": "6f9194b042fe84b0",
+        "id": "9ad7ebd29d08ab63",
         "type": "debug",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "debug empty",
         "active": true,
         "tosidebar": true,
@@ -145,9 +110,9 @@
         "wires": []
     },
     {
-        "id": "8d81bcd7d7861da8",
+        "id": "f7ccce1251662911",
         "type": "comment",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "Run every 15 minutes, one message per sensor",
         "info": "",
         "x": 260,
@@ -155,9 +120,9 @@
         "wires": []
     },
     {
-        "id": "328bbb346028a037",
+        "id": "025a51a01fa39a41",
         "type": "comment",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "do not send empty data",
         "info": "",
         "x": 220,
@@ -165,14 +130,13 @@
         "wires": []
     },
     {
-        "id": "e27eba8c7fb62be4",
+        "id": "11be2a95ad716ae7",
         "type": "function",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "set gateway and sensorCode",
         "func": "let result = {};\nmsg.payload.forEach(d => {\n    const item = {\n        timestamp: d.timestamp,\n        temperature: d.temperature    \n    };\n    if(result.hasOwnProperty(d.sensorCode)){\n        result[d.sensorCode].push(item);\n    } else {\n        result[d.sensorCode] = [item];\n    }\n});   \n\nfor (const [key, value] of Object.entries(result)) {\n    let clonedMsg = RED.util.cloneMessage(msg);\n    clonedMsg.payload = { \n        gatewayId: \"662579601d6f251dd42f91d5\",\n        password: \"12345\",\n        code: key,\n        data: value\n    };\n    node.send(clonedMsg);\n}\n",
         "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
+        "noerr": 5,
         "initialize": "",
         "finalize": "",
         "libs": [],
@@ -180,15 +144,15 @@
         "y": 240,
         "wires": [
             [
-                "af4065f0941f984b",
-                "b017fb4718d79382"
+                "d32a1b85dd28558f",
+                "d08f10e9e74c3d1d"
             ]
         ]
     },
     {
-        "id": "af4065f0941f984b",
+        "id": "d32a1b85dd28558f",
         "type": "http request",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "",
         "method": "POST",
         "ret": "obj",
@@ -205,15 +169,15 @@
         "y": 240,
         "wires": [
             [
-                "c27c7824a4a07538",
-                "b017fb4718d79382"
+                "b792e8ed1af90058",
+                "d08f10e9e74c3d1d"
             ]
         ]
     },
     {
-        "id": "e79c99389ebc62e5",
+        "id": "5d8026c7e1ca9d1e",
         "type": "mongodb4",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "clientNode": "5376fae6dc0a9cbe",
         "mode": "collection",
         "collection": "data",
@@ -226,14 +190,14 @@
         "y": 380,
         "wires": [
             [
-                "e62f89401ab2af8d"
+                "ae455ff7a3eaddc3"
             ]
         ]
     },
     {
-        "id": "c27c7824a4a07538",
+        "id": "b792e8ed1af90058",
         "type": "switch",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "http status",
         "property": "statusCode",
         "propertyType": "msg",
@@ -256,17 +220,17 @@
         "y": 440,
         "wires": [
             [
-                "0d4d35059fb1251b"
+                "c78ab47eeb1237a9"
             ],
             [
-                "92f559f7b1fbcf47"
+                "6e80ecd935e41243"
             ]
         ]
     },
     {
-        "id": "92f559f7b1fbcf47",
+        "id": "6e80ecd935e41243",
         "type": "debug",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "debug data error",
         "active": true,
         "tosidebar": true,
@@ -281,13 +245,12 @@
         "wires": []
     },
     {
-        "id": "0d4d35059fb1251b",
+        "id": "c78ab47eeb1237a9",
         "type": "function",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "prepare delete transported data",
         "func": "msg.payload = { $and: [\n  { \"sensorCode\": { $eq: msg.payload.code } },\n  {\"timestamp\": { $lte: msg.payload.lastTimestamp }}\n]};\n\nreturn msg;\n",
         "outputs": 1,
-        "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -296,14 +259,14 @@
         "y": 380,
         "wires": [
             [
-                "e79c99389ebc62e5"
+                "5d8026c7e1ca9d1e"
             ]
         ]
     },
     {
-        "id": "b017fb4718d79382",
+        "id": "d08f10e9e74c3d1d",
         "type": "debug",
-        "z": "54ace4d9f27746f2",
+        "z": "90906ed46c0a403c",
         "name": "debug http data",
         "active": true,
         "tosidebar": true,
@@ -316,6 +279,236 @@
         "x": 920,
         "y": 160,
         "wires": []
+    },
+    {
+        "id": "13c76f813fbe3636",
+        "type": "cronplus",
+        "z": "90906ed46c0a403c",
+        "name": "Run!",
+        "outputField": "payload.timestamp",
+        "timeZone": "",
+        "storeName": "",
+        "commandResponseMsgOutput": "output1",
+        "defaultLocation": "",
+        "defaultLocationType": "default",
+        "outputs": 1,
+        "options": [
+            {
+                "name": "schedule1",
+                "topic": "topic1",
+                "payloadType": "date",
+                "payload": "",
+                "expressionType": "cron",
+                "expression": "0 */10 * * * *",
+                "location": "",
+                "offset": "0",
+                "solarType": "all",
+                "solarEvents": "sunrise,sunset"
+            }
+        ],
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "c41bfe3b0a252ca6"
+            ]
+        ]
+    },
+    {
+        "id": "646c53e3d09a1e0e",
+        "type": "telegram receiver",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "bot": "cd5d27edbe39d186",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 210,
+        "y": 720,
+        "wires": [
+            [
+                "c6e8158f4349a081"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c6e8158f4349a081",
+        "type": "function",
+        "z": "90906ed46c0a403c",
+        "name": "Chatbot",
+        "func": "// Retrieve the latest temperature from the flow variable\nvar temperature = flow.get(\"latestTemperature\");\nvar incomingMsg = msg.payload.content.toLowerCase();\n\nmsg.payload = {\n    chatId: 7381544509,\n    type: \"message\",\n    content: \"\"\n};\n\nswitch (incomingMsg) {\n    case \"temperature\":\n        msg.payload.content = \"Current temperature is: \" + Math.floor(temperature);\n        break;\n    case \"/help\":\n        msg.payload.content = \"You can use these commands: Temperature - write current temperature;\";\n        break;\n    case \"/start\":\n        msg.payload.content = \"Hi! I am the uuOnlyHot bot. I am great at making sure you are not too hot ;). You can write /help to see all commands.\";\n        break;\n    default:\n        msg.payload.content = \"I don't understand. Write /help to list all available commands.\";\n        break;\n}\n\nif (msg.payload.content) {\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 1,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 720,
+        "wires": [
+            [
+                "b8b87dc15a069ba7"
+            ]
+        ]
+    },
+    {
+        "id": "b8b87dc15a069ba7",
+        "type": "telegram sender",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "bot": "cd5d27edbe39d186",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "43883da59d30e603",
+        "type": "mqtt in",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "topic": "node/Sensor1:0/thermometer/0:1/temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "29fba84a.b2af58",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 780,
+        "wires": [
+            [
+                "fb64769cb5aa2e3d"
+            ]
+        ]
+    },
+    {
+        "id": "64aa3f4d750e086e",
+        "type": "mqtt in",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "topic": "node/Sensor1:0/battery/-/percentage",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "29fba84a.b2af58",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 660,
+        "wires": [
+            [
+                "9087fdbe7415cc68"
+            ]
+        ]
+    },
+    {
+        "id": "5e1e08822f8bb242",
+        "type": "telegram sender",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "bot": "cd5d27edbe39d186",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 690,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9087fdbe7415cc68",
+        "type": "function",
+        "z": "90906ed46c0a403c",
+        "name": "Battery",
+        "func": "var battery = msg.payload;\nmsg.payload = {\n    chatId: 7381544509,\n    type: \"message\",\n    content: \"Battery of this sensor is: \" + battery + \"%\",\n};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 660,
+        "wires": [
+            [
+                "5e1e08822f8bb242"
+            ]
+        ]
+    },
+    {
+        "id": "fb64769cb5aa2e3d",
+        "type": "function",
+        "z": "90906ed46c0a403c",
+        "name": "Save Temp",
+        "func": "flow.set(\"latestTemperature\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 2,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd904df179354884",
+        "type": "mqtt in",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "topic": "node/Sensor1:0/push-button/-/event-count",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "29fba84a.b2af58",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 600,
+        "wires": [
+            [
+                "f0f1b329c50eec9d"
+            ]
+        ]
+    },
+    {
+        "id": "f0f1b329c50eec9d",
+        "type": "function",
+        "z": "90906ed46c0a403c",
+        "name": "TempByButton",
+        "func": "// Retrieve the latest temperature from the flow variable\nvar temperature = flow.get(\"latestTemperature\");\nmsg.payload = {\n    chatId: 7381544509,\n    type: \"message\",\n    content: \"Current temperature of this sensor is: \" + Math.floor(temperature),\n};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 1,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 600,
+        "wires": [
+            [
+                "719abec0f91f0a39"
+            ]
+        ]
+    },
+    {
+        "id": "719abec0f91f0a39",
+        "type": "telegram sender",
+        "z": "90906ed46c0a403c",
+        "name": "",
+        "bot": "cd5d27edbe39d186",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 850,
+        "y": 600,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "5376fae6dc0a9cbe",
@@ -340,5 +533,57 @@
         "uri": "",
         "advanced": "{}",
         "uriTabActive": "tab-uri-simple"
+    },
+    {
+        "id": "cd5d27edbe39d186",
+        "type": "telegram bot",
+        "botname": "uuOnlyHot",
+        "usernames": "",
+        "chatids": "7381544509",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "29fba84a.b2af58",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     }
 ]
