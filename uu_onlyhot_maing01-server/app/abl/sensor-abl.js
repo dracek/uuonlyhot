@@ -55,11 +55,14 @@ class SensorAbl {
 
   async getData(awid, session, dtoIn) {
 
-    // todo validace!
+    // todo type & validace!
+    let uuAppErrorMap = {};
 
-    // todo sensor exist!
+    let sensor = await this.dao.get(awid, dtoIn.sensorId);
 
-    //console.log(dtoIn);
+    if (!sensor) {
+      throw new Errors.GetData.SensorNotPresent({ uuAppErrorMap });
+    }
 
     let filter = { $and: [
         { "sensorId": { $eq: dtoIn.sensorId }},
@@ -74,22 +77,56 @@ class SensorAbl {
     } catch (e) {
       if (e instanceof ObjectStoreError) {
         //todo another error
-        //throw new Errors.List.ListDaoFailed({ uuAppErrorMap }, e);
+        throw new Errors.List.ListDaoFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
-    dtoOut.itemList = dtoOut.itemList.map(item => ({ "timestamp": item.timestamp, "temperature": item.temperature }));
+    if (dtoIn.aggregate && dtoIn.aggregate === 'DAILY'){
+      dtoOut.itemList = this.aggregateDaily(dtoOut.itemList);
+    } else {
+      dtoOut.itemList = dtoOut.itemList.map(item => ({ "timestamp": item.timestamp, "temperature": item.temperature }));
+    }
 
-    //dtoOut.uuAppErrorMap = {};
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
 
     return dtoOut;
-   
   }
 
-  async importData(awid, session, dtoIn) {
+  aggregateDaily = (data) => {
+    const groupedData = {};
 
-    // todo: gateway a autorizace bude řešená přes middleware
+    data.forEach(entry => {
+        const date = new Date(entry.timestamp);
+        date.setHours(0, 0, 0, 0);
+        const day = date.getTime();
+
+        if (!groupedData[day]) {
+            groupedData[day] = {
+                min: entry.temperature,
+                max: entry.temperature
+            };
+        } else {
+            if (entry.temperature < groupedData[day].min) {
+                groupedData[day].min = entry.temperature;
+            }
+            if (entry.temperature > groupedData[day].max) {
+                groupedData[day].max = entry.temperature;
+            }
+        }
+    });
+
+    let result = [];
+    for (const [key, value] of Object.entries(groupedData)) {
+      console.log(`${key}: ${value}`);
+      value.timestamp = Number(key);
+      result.push(value);
+    }
+
+    return result;
+};
+
+  async importData(awid, session, dtoIn) {
 
     let validationResult = this.validator.validate("sensorImportDataDtoInType", dtoIn);
     

@@ -151,6 +151,14 @@ const ImportData = {
 
 const GetData = {
   UC_CODE: `${SENSOR_ERROR_PREFIX}getData/`,
+
+  SensorNotPresent: class extends OnlyhotMainUseCaseError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetData.UC_CODE}sensorNotPresent`;
+      this.message = NOT_PRESENT;
+    }
+  },
   
 };
 

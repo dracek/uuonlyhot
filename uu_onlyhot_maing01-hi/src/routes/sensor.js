@@ -12,6 +12,7 @@ import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import Confirm from "../bricks/confirm.js";
 import SensorEditForm from "../bricks/sensor/sensor-edit-form.js";
 import DayChart from "../bricks/sensor/day-chart.js";
+import MonthChart from "../bricks/sensor/month-chart.js";
 
 //@@viewOff:imports
 
@@ -88,6 +89,8 @@ let Sensor = createVisualComponent({
         : sensorContext.data.code;
     }
 
+    const temperature = sensorContext.data && sensorContext.data.lastTemperature ? (sensorContext.data.lastTemperature + "°C") : "N/A";
+
     useEffect(() => {
       sensorContext.callsMap.sensorGet({ id: props.params.id });
     }, [props.params]);
@@ -163,14 +166,12 @@ let Sensor = createVisualComponent({
               </Button>
               </h1>
             <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign:'center' }}>
-               ... info or somethung!
+               current temperature: {temperature}
             </Typography>
-            
-            <div style={{ color: "white", margin: "20px" }}>
-              ...todo ...
-            </div>
+          
 
             <DayChart sensor={sensorId} />
+            <MonthChart sensor={sensorId} />
 
           </div>
 

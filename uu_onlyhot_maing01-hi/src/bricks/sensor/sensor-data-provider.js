@@ -38,6 +38,7 @@ const SensorDataProvider = createComponent({
     const [data, setData] = useState({});
     const [listData, setListData] = useState({});
     const [sensorData, setSensorData] = useState({});
+    const [sensorAggregatedData, setSensorAggregatedData] = useState({});
     const { addAlert } = useAlertBus();
 
     function infoMsg(msg){
@@ -134,6 +135,19 @@ const SensorDataProvider = createComponent({
       }
     }
 
+    async function sensorGetAggregatedData(dtoIn) {
+      try {
+        setStatus(STATUS_WAITING);
+        let res = await Calls.sensorGetData(dtoIn);
+        setStatus(STATUS_DONE);
+        setSensorAggregatedData(res);
+      } catch (error) {
+        setStatus(STATUS_ERROR);
+        alertMsg({message: 'Cannot list sensor aggregated data.'})
+        //console.error("NOT GOOD", error);
+      }
+    }
+
     const findSensorByNameOrId = (input) => {
       const inputLowerCase = input.toLowerCase();
       return listData.itemList.find(sensor => 
@@ -152,13 +166,15 @@ const SensorDataProvider = createComponent({
       data,
       listData,
       sensorData,
+      sensorAggregatedData,
       callsMap: {
         sensorList,
         sensorCreate,
         sensorGet,
         sensorUpdate,
         sensorDelete,
-        sensorGetData
+        sensorGetData,
+        sensorGetAggregatedData
       },
       findSensorByNameOrId 
     };

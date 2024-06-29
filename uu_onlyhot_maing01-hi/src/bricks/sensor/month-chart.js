@@ -55,9 +55,9 @@ const Css = {
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-let DayChart = createVisualComponent({
+let MonthChart = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "DayChart",
+  uu5Tag: Config.TAG + "MonthChart",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -78,14 +78,16 @@ let DayChart = createVisualComponent({
     const start = new Date();
     const end = new Date();
     start.setHours(0, 0, 0, 0);
+    start.setDate(1);
     end.setHours(23, 59, 59, 999);
 
     useEffect(() => {
 
-      sensorContext.callsMap.sensorGetData({
+      sensorContext.callsMap.sensorGetAggregatedData({
         sensorId: sensorId,
         from: start.getTime(),
         to: end.getTime(),
+        aggregate: 'DAILY'
       });
 
     }, [props.sensor]);
@@ -98,10 +100,15 @@ let DayChart = createVisualComponent({
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
 
-    let chartdata = (sensorContext.sensorData && sensorContext.sensorData.itemList) || [];
+    let chartdata = (sensorContext.sensorAggregatedData && sensorContext.sensorAggregatedData.itemList) || [];
 
     const options = {
       responsive: true,
+      
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
       plugins: {
         legend: {
           position: "top",
@@ -109,14 +116,14 @@ let DayChart = createVisualComponent({
         },
         title: {
           display: true,
-          text: "Daily data",
+          text: "Monthly data",
           color: "white",
         },
         tooltip: {
             callbacks: {
                 title: (context) => {
                     let date = moment(context[0].parsed.x);
-                    return date.format("HH:mm");
+                    return date.format("DD.MM.");
                 },
                 label: function(context) {
                     //console.log("ctx",context);
@@ -138,13 +145,14 @@ let DayChart = createVisualComponent({
       },
       scales: {
         x: {
+            
             min: start,
             max: end,
             type: 'time',
             ticks: {
                 color: "white",
                 callback: function(value, index, ticks) {
-                  return moment(value).format("HH:mm");
+                  return moment(value).format("DD.MM.");
                 }
             },
             grid: {
@@ -152,6 +160,7 @@ let DayChart = createVisualComponent({
             },
         },
         y: {
+            suggestedMin: Math.min(...chartdata.map(item => item.min)) - 5,
             ticks: {
               color: "white",
             },
@@ -163,20 +172,29 @@ let DayChart = createVisualComponent({
     };
 
     let data = {
-        datasets: [{
-            data: chartdata,
-            backgroundColor: "#E50099",
-        }],
+        datasets: [
+          {
+            label: "max", 
+            data: chartdata.map(item => { return Object.assign({temperature: item.max}, item);}),
+            backgroundColor: "#F7FF00",
+            borderColor:  "#F7FF00",
+          },{
+            label: "min", 
+            data: chartdata.map(item => { return Object.assign({temperature: item.min}, item); }),
+            backgroundColor: "#00FFE5",
+            borderColor:  "#00FFE5",
+          },
+        ],
       }
 
     return (
-        <Chart type="bar" options={options} data={data} />
+        <Chart type="line" options={options} data={data} />
     );
     //@@viewOff:render
   },
 });
 
 //@@viewOn:exports
-export { DayChart };
-export default DayChart;
+export { MonthChart };
+export default MonthChart;
 //@@viewOff:exports
