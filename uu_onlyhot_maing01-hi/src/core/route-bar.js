@@ -15,8 +15,8 @@ import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 
 const pages = [
   {name:'Home', route: 'home'},
+  {name:'Sensors', route: 'sensorList'},
   {name:'About', route: 'about'},
-  {name:'Sensors', route: 'sensorList'}
 ];
 
 const ResponsiveAppBar = () => {
