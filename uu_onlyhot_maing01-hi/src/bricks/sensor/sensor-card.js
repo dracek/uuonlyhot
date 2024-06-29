@@ -8,6 +8,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Link } from 'uu5g05-elements';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import Tooltip from '@mui/material/Tooltip';
+
+
 
 const SensorCard = ({ sensor }) => {
   const temperature = sensor.lastTemperature ? `${sensor.lastTemperature.toFixed(1)}°C` : 'N/A';
@@ -34,6 +37,7 @@ const SensorCard = ({ sensor }) => {
       </CardContent>
       <CardActions sx={{ justifyContent: 'flex-end' }}>
         <Link href={`sensor?id=${sensor.id}`}>
+        <Tooltip title="DETAIL" placement="top">
           <Button sx={{
             alignItems: 'center',
             margin: 'auto',
@@ -44,6 +48,7 @@ const SensorCard = ({ sensor }) => {
           }}>
               <InfoRoundedIcon fontSize="large"/>nfo
             </Button>
+            </Tooltip>
         </Link>
       </CardActions>
     </Card>

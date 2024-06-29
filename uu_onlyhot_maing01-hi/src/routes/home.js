@@ -18,29 +18,42 @@ const Css = {
   main: () =>
     Config.Css.css({
       background: "#23226e",
-      minHeight: "100vh"
-  }),
-  box: () =>
-    Config.Css.css({
-      display: "flex",
-      maxWidth: 624,
-      minWidth: 480,
-      padding: "24px",
-      margin: "0 auto",
-      flexWrap: "wrap",
-      flexDirection: "column",
-      color: "f34fc7",
-      "& > *": { display: "block", width: "100%" },
-      "& h1": { marginBottom: "45px" }
+      minHeight: "100vh",
+      padding: "16px",
+      "@media (min-width: 600px)": {
+        padding: "10px",
+      },
     }),
+    box: () =>
+      Config.Css.css({
+        display: "flex",
+        padding:'10px',
+        flexDirection: "column",
+        alignItems: "center",
+        maxWidth: "90%",
+        color: "f34fc7",
+        "& > *": { width: "90%" },
+        "& h1": {
+          marginBottom: "45px",
+          fontSize: "30px",
+          "@media (min-width: 600px)": {
+            fontSize: "50px",
+            padding:'0'
+          },
+        },
+      }),
   header: () =>
     Config.Css.css({
-      fontSize: '50px',
+      fontSize: '30px',
       color: 'transparent',
       backgroundImage: 'linear-gradient(90deg, #00FFE5, #F7FF00)',
       WebkitBackgroundClip: 'text',
-      backgroundClip: 'text'
-    }),  
+      backgroundClip: 'text',
+      "@media (min-width: 600px)": {
+        fontSize: '50px',
+      },
+    }),
+  
 };
 
 let Home = createVisualComponent({
@@ -127,10 +140,10 @@ let Home = createVisualComponent({
         return <div>No data...</div>;
       }
       return (
-        <div>
+        <div >
           {data.itemList.map((gateway) => {
             const sensors = sensorData.itemList ? sensorData.itemList.filter((sen) => sen.gatewayId === gateway.id) : [];
-            return <GatewayRow key={gateway.id} gateway={gateway} sensors={sensors} onEdit={handleEditFormOpen} onPswd={handlePswdFormOpen} onDelete={handleDeleteFormOpen} />;
+            return <GatewayRow key={gateway.id} gateway={gateway} sensors={sensors} onEdit={handleEditFormOpen} onPswd={handlePswdFormOpen} onDelete={handleDeleteFormOpen} style={{alignItems:'start'}}/>;
           })}
         </div>
       );

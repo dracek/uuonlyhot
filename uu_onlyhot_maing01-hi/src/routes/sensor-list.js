@@ -4,6 +4,7 @@ import { withRoute } from "uu_plus4u5g02-app";
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import SensorCard from "../bricks/sensor/sensor-card.js";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
@@ -15,7 +16,7 @@ import { Chart } from 'react-chartjs-2';
 //@@viewOff:imports
 
 //@@viewOn:constants
-const SENSORS_PER_PAGE = 5;
+const SENSORS_PER_PAGE = 6;
 //@@viewOff:constants
 
 //@@viewOn:css
@@ -24,16 +25,19 @@ const Css = {
     Config.Css.css({
       background: "#23226e",
       minHeight: "100vh",
-      color: "white",
+      padding: "16px",
+      "@media (min-width: 600px)": {
+        padding: "10px",
+      },
     }),
   box: () =>
     Config.Css.css({
       display: "flex",
-      maxWidth: 624,
+      maxWidth: "90%",
       minWidth: 480,
       alignItems: "center",
-      padding: "24px",
-      margin: "0 auto",
+      padding: "30px",
+      margin: "auto",
       flexDirection: "column",
       color: "black",
       "& > *": {
@@ -95,7 +99,6 @@ let SensorList = createVisualComponent({
     //@@viewOn:render
     const attrs = Utils.VisualComponent.getAttrs(props);
 
-
     const sensors = sensorContext.listData.itemList || [];
     const paginatedSensors = paginate(sensors, SENSORS_PER_PAGE, page);
 
@@ -108,10 +111,14 @@ let SensorList = createVisualComponent({
             <p style={{color:'white', textAlign:'center', margin: 'auto', }}>Use sensor's name or ID</p>
             <SensorSearch />
             <h2 className={Css.header()}>All Sensors</h2>
-            {paginatedSensors.map((sensor) => (
-              <SensorCard key={sensor.id} sensor={sensor} />
-            ))}
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Grid container spacing={0} justifyContent="center">
+              {paginatedSensors.map((sensor) => (
+                <Grid item  md={6} lg={4} key={sensor.id}>
+                  <SensorCard sensor={sensor} />
+                </Grid>
+              ))}
+            </Grid>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2, }}>
               <Pagination
                 count={Math.ceil(sensors.length / SENSORS_PER_PAGE)}
                 page={page}

@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SensorCard from "./sensor-card";
+import Tooltip from '@mui/material/Tooltip';
+
 
 const SensorSearch = () => {
   const { findSensorByNameOrId } = useContext(SensorContext);
@@ -65,6 +67,7 @@ const SensorSearch = () => {
             style: { color: 'white' },
           }}
         />
+        <Tooltip title="SEARCH" placement="top">
         <Button
           onClick={handleSearch}
           sx={{
@@ -76,6 +79,7 @@ const SensorSearch = () => {
         >
           <SearchRoundedIcon fontSize="large"/>
         </Button>
+        </Tooltip>
       </Box>
       {sensor ? (
         <Box
