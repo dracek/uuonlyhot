@@ -124,7 +124,7 @@ let Sensor = createVisualComponent({
         : sensorContext.data.code;
     }
 
-    const temperature = sensorContext.data && sensorContext.data.lastTemperature ? (sensorContext.data.lastTemperature + "°C") : "N/A";
+    const temperature = sensorContext.data && sensorContext.data.lastTemperature ? (Number(sensorContext.data.lastTemperature).toFixed(1) + "°C") : "N/A";
 
     useEffect(() => {
       sensorContext.callsMap.sensorGet({ id: props.params.id });

@@ -27,6 +27,7 @@ const Css = {
     }),
   id: () =>
     Config.Css.css({
+      fontSize: "12px",
       paddingLeft: '25px',
       color: '#00FFE5',
     }),
@@ -58,11 +59,6 @@ const Css = {
 
 const GatewayRow = ({ gateway, sensors, onEdit, onPswd, onDelete }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(gateway.notificationsEnabled || false);
-
-  const handleToggleNotifications = (data) => {
-    setNotificationsEnabled(!notificationsEnabled);
-    //blablabla
-  };
 
   return (
     <Box className={Css.row()}>
@@ -137,12 +133,6 @@ const GatewayRow = ({ gateway, sensors, onEdit, onPswd, onDelete }) => {
           </Grid>
         ))}
       </Grid>
-      <FormComponent
-        onSubmit={handleToggleNotifications}
-        initialValue={{ notificationsEnabled }}
-        onCancel={() => setNotificationsEnabled(notificationsEnabled)}
-      >
-      </FormComponent>
     </Box>
   );
 };
