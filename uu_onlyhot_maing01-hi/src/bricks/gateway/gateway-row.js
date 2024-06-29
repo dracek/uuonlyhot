@@ -6,7 +6,7 @@ import SensorCard from '../sensor/sensor-card.js';
 import Button from '@mui/material/Button';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
-import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
+import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
 import Config from '../config/config.js';
 
 
@@ -55,7 +55,7 @@ const GatewayRow = ({ gateway, sensors, onEdit, onPswd, onDelete }) => {
             '&:active': { transform: 'scale(1.2)' },
           }}
         >
-          <PasswordRoundedIcon fontSize="large" />
+          <VpnKeyRoundedIcon fontSize="large" />
         </Button>
 
         <Button

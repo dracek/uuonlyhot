@@ -1,15 +1,10 @@
 import React, { useState, useContext } from "react";
 import { SensorContext } from "./sensor-context";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Link } from 'uu5g05-elements';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import SensorCard from "./sensor-card";
 
 const SensorSearch = () => {
   const { findSensorByNameOrId } = useContext(SensorContext);
@@ -23,7 +18,7 @@ const SensorSearch = () => {
 
   return (
     <div>
-         <Box
+      <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -32,7 +27,7 @@ const SensorSearch = () => {
           mt: 4,
         }}
       >
-        <TextField
+         <TextField
           id="outlined-basic"
           label="Search for a sensor by name or ID"
           variant="outlined"
@@ -40,6 +35,7 @@ const SensorSearch = () => {
           placeholder="Search for a sensor by name or ID"
           value={searchTerm}
           size="small"
+          autoComplete="off"
           sx={{
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
@@ -58,6 +54,9 @@ const SensorSearch = () => {
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#00FFE5",
             },
+            "& .MuiInputBase-input": {
+              color: "white",
+            }
           }}
           InputLabelProps={{
             style: { color: '#00FFE5' },
@@ -79,40 +78,15 @@ const SensorSearch = () => {
         </Button>
       </Box>
       {sensor ? (
-        <Card sx={{
-          minWidth: 275,
-          backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-          borderRadius: 5, 
-          boxShadow: 3,
-          margin: '10px 20px',
-          color: 'white'
-        }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-              Sensor Details
-            </Typography>
-            <Typography variant="h5" component="div" color='white'>
-              {sensor.name || sensor.code}
-            </Typography>
-            <Typography sx={{ mb: 1.5, fontSize: '60px', textAlign:'center' }} color="#00FFE5">
-              {sensor.lastTemperature ? `${sensor.lastTemperature.toFixed(1)}°C` : 'N/A'}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Link href={`sensor?id=${sensor.id}`}>
-              <Button sx={{
-                alignItems: 'center',
-                margin: 'auto',
-                color: '#E50099',
-                mx: 1, 
-                '&:hover': { color: '#00FFE5' },
-                '&:active': { transform: 'scale(1.2)' },
-              }}>
-                <InfoRoundedIcon /> 
-              </Button>
-            </Link>
-          </CardActions>
-        </Card>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
+          }}
+        >
+          <SensorCard sensor={sensor} />
+        </Box>
       ) : (
         searchTerm && <p style={{color:'white', textAlign:'center'}}>No sensor found.</p>
       )}

@@ -206,10 +206,7 @@ let Sensor = createVisualComponent({
         <BackgroundProvider background="dark">
           <RouteBar />
           <div className={Css.box()}>
-            <h1 className={Css.header()}>Sensor {sensorName}</h1>
-            <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white' }}>
-
-              <Button
+            <h1 className={Css.header()}>Sensor {sensorName}<Button
                 onClick={handleEditFormOpen}
                 sx={{
                   alignItems: 'center',
@@ -221,8 +218,7 @@ let Sensor = createVisualComponent({
                 }}
               >
                 <EditNoteRoundedIcon fontSize="large" />
-              </Button>
-
+              </Button> 
               <Button
                 onClick={handleDeleteFormOpen}
                 sx={{
@@ -236,11 +232,10 @@ let Sensor = createVisualComponent({
               >
                 <HighlightOffRoundedIcon fontSize="large" />
               </Button>
+              </h1>
+            <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign:'center' }}>
+            todo nějaké detaily, edit, grafy...
             </Typography>
-
-            <div style={{ color: "white", margin: "20px" }}>
-              todo nějaké detaily, edit, grafy...
-            </div>
             <Chart type="bar" options={options} data={data} />
           </div>
 

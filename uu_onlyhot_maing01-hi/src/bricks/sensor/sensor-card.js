@@ -15,6 +15,7 @@ const SensorCard = ({ sensor }) => {
   return (
     <Card sx={{
         minWidth: 275,
+        maxWidth:275,
         backgroundColor: 'rgba(255, 255, 255, 0.1)', 
         borderRadius: 5, 
         boxShadow: 3,
@@ -31,7 +32,7 @@ const SensorCard = ({ sensor }) => {
            {temperature}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ justifyContent: 'flex-end' }}>
         <Link href={`sensor?id=${sensor.id}`}>
           <Button sx={{
             alignItems: 'center',
@@ -41,7 +42,7 @@ const SensorCard = ({ sensor }) => {
             '&:hover': { color: '#00FFE5' },
             '&:active': { transform: 'scale(1.2)' },
           }}>
-              <InfoRoundedIcon />nfo
+              <InfoRoundedIcon fontSize="large"/>nfo
             </Button>
         </Link>
       </CardActions>

@@ -31,9 +31,9 @@ const Css = {
       display: "flex",
       maxWidth: 624,
       minWidth: 480,
+      alignItems: "center",
       padding: "24px",
       margin: "0 auto",
-      flexWrap: "wrap",
       flexDirection: "column",
       color: "black",
       "& > *": {
@@ -100,7 +100,7 @@ let SensorList = createVisualComponent({
     const paginatedSensors = paginate(sensors, SENSORS_PER_PAGE, page);
 
     return (
-      <div {...attrs} style={{ background: "#23226e", minHeight: "100vh" }}>
+      <div {...attrs} style={{ background: "#23226e", minHeight: "100vh"}}>
         <BackgroundProvider background="dark">
           <RouteBar />
           <div className={Css.box()}>
