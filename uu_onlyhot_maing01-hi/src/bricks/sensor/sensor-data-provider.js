@@ -149,9 +149,11 @@ const SensorDataProvider = createComponent({
     }
 
     const findSensorByNameOrId = (input) => {
-      const inputLowerCase = input.toLowerCase();
+      const regex = new RegExp(input, "i");
+      console.log(regex);
       return listData.itemList.find(sensor => 
-        sensor.name.toLowerCase() === inputLowerCase || sensor.id === input
+        regex.test(sensor.name)
+         || sensor.id === input
       );
     };
 

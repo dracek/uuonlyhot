@@ -208,11 +208,10 @@ let DayChart = createVisualComponent({
       }
 
     return (
-      <div>
+      <div style={{paddingBottom: '35px'}}>
         <div>
-          <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign: 'center' }}>
+          <Typography variant="h5" component="h2" sx={{ margin: '10px', color: 'white', textAlign: 'center', paddingBottom: '20px' }}>
           selected date: {selectedDate.format("DD.MM.")} 
-          
           <IconButton onClick={() => setCalendarVisibility(true)} sx={{ color: '#E50099', ml: 2 }}>
             <CalendarTodayIcon fontSize="large" />
           </IconButton>

@@ -110,29 +110,6 @@ let SensorList = createVisualComponent({
             <h1 className={Css.header()}>Search for a Sensor</h1>
             <p style={{color:'white', textAlign:'center', margin: 'auto', }}>Use sensor's name or ID</p>
             <SensorSearch />
-            <h2 className={Css.header()}>All Sensors</h2>
-            <Grid container spacing={0} justifyContent="center">
-              {paginatedSensors.map((sensor) => (
-                <Grid item  md={6} lg={4} key={sensor.id}>
-                  <SensorCard sensor={sensor} />
-                </Grid>
-              ))}
-            </Grid>
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2, }}>
-              <Pagination
-                count={Math.ceil(sensors.length / SENSORS_PER_PAGE)}
-                page={page}
-                onChange={handlePageChange}
-                sx={{"& .MuiPaginationItem-root": {
-                      color: 'white',
-                    },
-                    "& .MuiPaginationItem-root.Mui-selected": {
-                      color: 'white',
-                      backgroundColor: '#E50099',
-                    },
-                  }}
-              />
-            </Box>
           </div>
         </BackgroundProvider>
       </div>
